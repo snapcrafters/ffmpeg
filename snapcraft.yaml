@@ -1,0 +1,77 @@
+name: ffmpeg
+version: 'N-76538-gb83c849'
+summary: Record, convert, and stream audio and video
+description: |
+  FFmpeg is a collection of libraries and tools to process multimedia content
+  such as audio, video, subtitles and related metadata.
+
+grade: stable
+confinement: classic
+
+apps:
+  ffmpeg:
+    command: usr/local/bin/ffmpeg
+    plugs:
+      - opengl
+
+parts:
+  ffmpeg:
+    source: git://source.ffmpeg.org/ffmpeg.git
+    source-type: git
+    source-commit: 'b83c849e8797fbb972ebd7f2919e0f085061f37f'
+    plugin: autotools
+    configflags: 
+      - --enable-nonfree
+      - --enable-nvenc
+      - --enable-nvresize
+      - --extra-cflags=-I$SNAPCRAFT_STAGE/cudautils -I$SNAPCRAFT_STAGE/nvenc_5.0.1_sdk/Samples/common/inc
+      - --extra-ldflags=-L$SNAPCRAFT_STAGE/cudautils
+      - --enable-gpl
+      - --enable-libx264
+    build-packages:
+      - build-essential
+      - yasm
+      - pkg-config
+      - libass-dev
+      - libfreetype6-dev
+      - libsdl1.2-dev
+      - libtheora-dev
+      - libva-dev
+      - libvdpau-dev
+      - libvorbis-dev
+      - libxcb1-dev
+      - libxcb-shm0-dev
+      - libxcb-xfixes0-dev
+      - texinfo
+      - zlib1g-dev
+      - libx264-dev
+      - libmp3lame-dev
+      - libopus-dev
+      - libx265-dev
+      - libvpx-dev
+      - curl # for prepare, below
+    prepare: |
+      curl -LO http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/ffmpeg_NVIDIA_gpu_acceleration.patch
+      git apply ffmpeg_NVIDIA_gpu_acceleration.patch
+    after: [cudautils, nvec]
+  nvec:
+    source: http://developer.download.nvidia.com/compute/nvenc/v5.0/nvenc_5.0.1_sdk.zip
+    plugin: dump
+  cudautils:
+    source: http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/cudautils.zip
+    plugin: make
+    build: |
+      cd cudautils
+      make
+      mkdir -p $SNAPCRAFT_PART_INSTALL/cudautils
+      cp *.o *.h *.a $SNAPCRAFT_PART_INSTALL/cudautils
+  x264:
+    source: git://git.videolan.org/x264.git
+    source-type: git
+    plugin: autotools
+    configflags: 
+      - --disable-cli
+      - --enable-static
+      - --enable-shared
+      - --enable-strip
+      - --disable-asm
