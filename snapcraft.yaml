@@ -11,8 +11,6 @@ confinement: classic
 apps:
   ffmpeg:
     command: usr/local/bin/ffmpeg
-    plugs:
-      - opengl
 
 parts:
   ffmpeg:
