@@ -10,7 +10,7 @@ confinement: classic
 
 apps:
   ffmpeg:
-    command: usr/local/bin/ffmpeg
+    command: bin/launcher $SNAP/usr/local/bin/ffmpeg
 
 parts:
   ffmpeg:
@@ -18,7 +18,7 @@ parts:
     source-type: git
     source-commit: 'b83c849e8797fbb972ebd7f2919e0f085061f37f'
     plugin: autotools
-    configflags: 
+    configflags:
       - --enable-nonfree
       - --enable-nvenc
       - --enable-nvresize
@@ -48,6 +48,8 @@ parts:
       - libx265-dev
       - libvpx-dev
       - curl # for prepare, below
+    stage-packages:
+      - libpulse0
     prepare: |
       curl -LO http://developer.download.nvidia.com/compute/redist/ffmpeg/1511-patch/ffmpeg_NVIDIA_gpu_acceleration.patch
       git apply ffmpeg_NVIDIA_gpu_acceleration.patch
@@ -67,9 +69,14 @@ parts:
     source: git://git.videolan.org/x264.git
     source-type: git
     plugin: autotools
-    configflags: 
+    configflags:
       - --disable-cli
       - --enable-static
       - --enable-shared
       - --enable-strip
       - --disable-asm
+  launcher:
+    plugin: dump
+    source: scripts
+    organize:
+      'launcher': bin/
