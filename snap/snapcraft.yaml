@@ -635,17 +635,17 @@ parts:
 apps:
   ffmpeg:
     command: usr/bin/ffmpeg
-    plugs:
-      - alsa
-      - camera
-      - desktop
-      - hardware-observe
-      - home
-      - network-bind
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - wayland
-      - x11
+    #plugs:
+    #  - alsa
+    #  - camera
+    #  - desktop
+    #  - hardware-observe
+    #  - home
+    #  - network-bind
+    #  - network
+    #  - opengl
+    #  - optical-drive
+    #  - pulseaudio
+    #  - removable-media
+    #  - wayland
+    #  - x11
