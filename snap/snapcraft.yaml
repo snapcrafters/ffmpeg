@@ -635,7 +635,9 @@ parts:
 
 apps:
   ffmpeg:
-    command: usr/bin/ffmpeg
+    command: 
+      - usr/bin/ffmpeg
+      - usr/bin/ffprobe
     #plugs:
     #  - alsa
     #  - camera
