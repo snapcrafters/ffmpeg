@@ -10,7 +10,7 @@ description: |
  committee, the community or a corporation.
 
 grade: stable
-confinement: classic
+confinement: strict
 
 parts:
 #### nv-codec-headers
@@ -633,20 +633,30 @@ parts:
       - -usr/share/doc
       - -usr/share/man
 
+  ffmpeg-wrapper:
+    plugin: dump
+    source: files
+    stage-packages:
+      - mesa-utils
+    organize:
+      'ffmpeg-wrapper': bin/
+    after:
+      - ffmpeg
+
 apps:
   ffmpeg:
-    command: usr/bin/ffmpeg
-    #plugs:
-    #  - alsa
-    #  - camera
-    #  - desktop
-    #  - hardware-observe
-    #  - home
-    #  - network-bind
-    #  - network
-    #  - opengl
-    #  - optical-drive
-    #  - pulseaudio
-    #  - removable-media
-    #  - wayland
-    #  - x11
+    command: bin/ffmpeg-wrapper
+    plugs:
+      - alsa
+      - camera
+      - desktop
+      - hardware-observe
+      - home
+      - network-bind
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - wayland
+      - x11
