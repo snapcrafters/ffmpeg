@@ -45,6 +45,13 @@ sudo sed -i 's/^}//' /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 echo '/dev/dri/renderD[0-9]* rw,' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 echo '}' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 sudo apparmor_parser -r /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
+sudo sed -i '/TAG==/i \
+#opengl \
+KERNEL=="renderD[0-9]*", TAG+="snap_ffmpeg_ffmpeg"' /etc/udev/rules.d/70-snap.ffmpeg.rules
+#echo '#opengl' | sudo tee -a /etc/udev/rules.d/70-snap.ffmpeg.rules
+#echo 'KERNEL=="renderD[0-9]*", TAG+="snap_ffmpeg_ffmpeg"' | sudo tee -a /etc/udev/rules.d/70-snap.ffmpeg.rules
+sudo udevadm control --reload-rules
+sudo udevadm trigger
 
 for LOCATION in usr snap; do
   title "ffmpeg ${LOCATION} features"
