@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+function append_dir() {
+  local var="$1"
+  local dir="$2"
+  if [ -d "$dir" ]; then
+    eval "export $var=\"\${$var:+\$$var:}\$dir\""
+  fi
+}
+
 case "$SNAP_ARCH" in
     "amd64") ARCH='x86_64-linux-gnu'
     ;;
@@ -11,11 +19,25 @@ case "$SNAP_ARCH" in
     ;;
 esac
 
+# Mesa Libs for OpenGL support
+append_dir LD_LIBRARY_PATH $SNAP/usr/lib/$ARCH/mesa
+append_dir LD_LIBRARY_PATH $SNAP/usr/lib/$ARCH/mesa-egl
+
+# Tell libGL where to find the drivers
+export LIBGL_DRIVERS_PATH=$SNAP/usr/lib/$ARCH/dri
+append_dir LD_LIBRARY_PATH $LIBGL_DRIVERS_PATH
+
+# Workaround in snapd for proprietary nVidia drivers mounts the drivers in
+# /var/lib/snapd/lib/gl that needs to be in LD_LIBRARY_PATH
+# Without that OpenGL using apps do not work with the nVidia drivers.
+# Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
+append_dir LD_LIBRARY_PATH /var/lib/snapd/lib/gl
+
 VENDOR=$(glxinfo | grep "OpenGL vendor")
 
 if [[ $VENDOR == *"Intel"* ]]; then
   export VDPAU_DRIVER_PATH="$SNAP/usr/lib/$ARCH/dri"
-  export LIBVA_DRIVERS_PATH="$SNAP/usr/lib/dri"
+  export LIBVA_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
 fi
 
 if [[ $VENDOR == *"NVIDIA"* ]]; then
