@@ -38,14 +38,11 @@ function encode() {
 }
 
 sudo apt install -y ffmpeg vainfo nvidia-smi 2>/dev/null
-sudo snap install ffmpeg_latest_amd64.snap --dangerous --classic
+sudo snap install ffmpeg_latest_amd64.snap --dangerous
 sudo snap connect ffmpeg:camera
 sudo snap connect ffmpeg:hardware-observe
 sudo sed -i 's/^}//' /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
-echo '@{PROC}/sys/vm/mmap_min_addr r,' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
-echo '@{PROC}/devices r,' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
-echo '/sys/devices/system/memory/block_size_bytes r,' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
-echo 'unix (bind,listen) type=seqpacket addr="@cuda-uvmfd-[0-9a-f]*",' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
+echo '/dev/dri/renderD[0-9]* rw,' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 echo '}' | sudo tee -a /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 sudo apparmor_parser -r /var/lib/snapd/apparmor/profiles/snap.ffmpeg.ffmpeg
 
