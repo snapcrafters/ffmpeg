@@ -1,6 +1,5 @@
 name: ffmpeg
 version: latest
-version-script: git -C parts/ffmpeg/build describe --tags --abbrev=0 | sed 's/n//'
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
@@ -25,85 +24,6 @@ parts:
 #
 ####
 
-
-#### intel-hybrid-driver
-#
-  libpciaccess:
-    plugin: autotools
-    source: https://xorg.freedesktop.org/releases/individual/lib/libpciaccess-0.14.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    build-packages:
-      - pkg-config
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-
-  libdrm:
-    plugin: autotools
-    source: https://dri.freedesktop.org/libdrm/libdrm-2.4.91.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    build-packages:
-      - pkg-config
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-    after:
-      - libpciaccess
-
-  libva:
-    plugin: autotools
-    source: https://github.com/intel/libva/releases/download/2.1.0/libva-2.1.0.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --libdir=/usr/lib
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-    after:
-      - libdrm
-
-  cmrt:
-    plugin: autotools
-    source: https://github.com/intel/cmrt/archive/1.0.6.tar.gz
-    build-packages:
-      - yasm
-    configflags:
-      - --prefix=/usr
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-    after:
-      - libva
-
-  intel-hybrid-driver:
-    plugin: autotools
-    source: https://github.com/01org/intel-hybrid-driver/archive/1.0.2.tar.gz
-    configflags:
-      - --prefix=/usr
-    after:
-      - cmrt
-#
-####
-
-#### libvdpau
-#
-  libvdpau:
-    plugin: autotools
-    source: http://people.freedesktop.org/~aplattner/vdpau/libvdpau-1.1.1.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-documentation
-      - --disable-static
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-#
-####
-
 #### x264
 #
   nasm:
@@ -111,14 +31,6 @@ parts:
     source: https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.xz
     configflags:
       - --prefix=/usr
-
-  intel-vaapi-driver:
-    plugin: autotools
-    source: https://github.com/intel/intel-vaapi-driver/releases/download/2.1.0/intel-vaapi-driver-2.1.0.tar.bz2
-    configflags:
-      - --prefix=/usr
-    after:
-      - libva
 
   x264:
     plugin: autotools
@@ -131,10 +43,10 @@ parts:
     prime:
       - usr/lib
       - -usr/lib/pkgconfig
+    build-packages:
+      - libva-dev
     after:
       - nasm
-      - libva
-      - intel-vaapi-driver
 #
 ####
 
@@ -335,7 +247,6 @@ parts:
       - alsa-lib
 #
 ####
-
 
 
 #### libpng
@@ -540,7 +451,8 @@ parts:
   ffmpeg:
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
-    override-build: |
+    override-pull: |
+      snapcraftctl pull
       last_committed_tag="$(git tag -l | grep -v v | sort -rV | head -n1)"
       last_committed_tag_ver="$(echo ${last_committed_tag} | sed 's/n//')"
       last_released_tag="$(snap info ffmpeg | awk '$1 == "beta:" { print $2 }')"
@@ -550,12 +462,14 @@ parts:
         git fetch
         git checkout "${last_committed_tag}"
       fi
-      snapcraftctl build
+      snapcraftctl set-version "$last_committed_tag_ver"
     build-packages:
       - libbz2-dev
+      - libdrm-dev
       - liblzma-dev
       - libomxil-bellagio-dev
       - libsctp-dev
+      - libvdpau-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
@@ -565,6 +479,10 @@ parts:
       - on amd64: [ libcrystalhd-dev ]
       - on i386:  [ libcrystalhd-dev ]
     stage-packages:
+      - i965-va-driver
+      - libdrm2
+      - libva-drm1
+      - libvdpau-va-gl1
       - libx11-6
       - libxau6
       - libxcb-shape0
@@ -574,6 +492,8 @@ parts:
       - libxdmcp6
       - libxext6
       - libxv1
+      - mesa-va-drivers
+      - mesa-vdpau-drivers
       - on amd64: [ libcrystalhd3 ]
       - on i386:  [ libcrystalhd3 ]
     configflags:
@@ -612,8 +532,6 @@ parts:
       - --enable-xlib
     after:
       - nv-codec-headers
-      - intel-hybrid-driver
-      - libvdpau
       - x264
       - x265
       - fdk-aac
