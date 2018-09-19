@@ -557,13 +557,31 @@ parts:
     stage-packages:
       - mesa-utils
     organize:
-      'ffmpeg-wrapper': bin/
+      'ffmpeg': bin/
+      'ffprobe': bin/
+      'wrapper': bin/
     after:
       - ffmpeg
 
 apps:
   ffmpeg:
-    command: bin/ffmpeg-wrapper
+    command: bin/ffmpeg
+    plugs:
+      - alsa
+      - camera
+      - desktop
+      - hardware-observe
+      - home
+      - network-bind
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - wayland
+      - x11
+  ffprobe:
+    command: bin/ffprobe
     plugs:
       - alsa
       - camera
