@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+WRAPPER=$(basename $0)
+
 function append_dir() {
   local var="$1"
   local dir="$2"
@@ -46,4 +48,4 @@ elif [[ $VENDOR == *"X.Org"* ]]; then
   export VDPAU_DRIVER_PATH="/usr/lib/$ARCH/vdpau/"
 fi
 
-exec $SNAP/usr/bin/ffmpeg "$@"
+exec $SNAP/usr/bin/$WRAPPER "$@"
