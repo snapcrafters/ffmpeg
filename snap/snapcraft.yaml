@@ -1,5 +1,5 @@
 name: ffmpeg
-version: latest
+adopt-info: ffmpeg
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
