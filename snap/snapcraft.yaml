@@ -391,7 +391,7 @@ parts:
   pulseaudio:
     plugin: autotools
     source: https://github.com/pulseaudio/pulseaudio.git
-    source-tag: v11.1
+    source-tag: v12.2
     override-build: |
       NOCONFIGURE=1 ./bootstrap.sh
       snapcraftctl build
