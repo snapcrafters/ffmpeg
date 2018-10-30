@@ -505,6 +505,7 @@ parts:
       - --enable-cuda
       - --enable-cuvid
       - --enable-libdrm
+      - --enable-ffplay
       - --enable-gpl
       - --enable-libass
       - --enable-libfdk-aac
@@ -591,6 +592,22 @@ apps:
       - x11
   ffprobe:
     command: bin/ffprobe
+    plugs:
+      - alsa
+      - camera
+      - desktop
+      - hardware-observe
+      - home
+      - network-bind
+      - network
+      - opengl
+      - optical-drive
+      - pulseaudio
+      - removable-media
+      - wayland
+      - x11
+  ffplay:
+    command: bin/ffplay
     plugs:
       - alsa
       - camera
