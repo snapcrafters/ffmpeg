@@ -558,6 +558,7 @@ parts:
     stage-packages:
       - mesa-utils
     organize:
+      'ffplay': bin/
       'ffmpeg': bin/
       'ffprobe': bin/
       'wrapper': bin/
