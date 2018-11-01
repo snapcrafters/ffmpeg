@@ -16,7 +16,7 @@ parts:
 #
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.1.24.2/nv-codec-headers-8.1.24.2.tar.gz
+    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.4/nv-codec-headers-8.2.15.4.tar.gz
     override-build: |
       make install PREFIX=/usr
     build-packages:
@@ -34,7 +34,7 @@ parts:
 
   x264:
     plugin: autotools
-    source: http://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20180501-2245-stable.tar.bz2
+    source: http://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20181030-2245-stable.tar.bz2
     configflags:
       - --prefix=/usr
       - --disable-cli
@@ -81,7 +81,7 @@ parts:
 #
   fdk-aac:
     plugin: autotools
-    source: https://github.com/mstorsjo/fdk-aac/archive/v0.1.5.tar.gz
+    source: https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz
     build-packages:
       - g++
     configflags:
