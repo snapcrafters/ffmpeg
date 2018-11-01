@@ -417,6 +417,7 @@ parts:
       - libudev1
     configflags:
       - --prefix=/usr
+      - --disable-atomic-arm-linux-helpers
       - --disable-bluez4
       - --disable-bluez5
       - --disable-default-build-tests
@@ -498,7 +499,6 @@ parts:
       - on i386:  [ libcrystalhd3 ]
     configflags:
       - --prefix=/usr
-      - --disable-atomic-arm-linux-helpers
       - --disable-debug
       - --disable-doc
       - --disable-static
