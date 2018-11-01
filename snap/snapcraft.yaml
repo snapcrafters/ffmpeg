@@ -498,6 +498,7 @@ parts:
       - on i386:  [ libcrystalhd3 ]
     configflags:
       - --prefix=/usr
+      - --disable-atomic-arm-linux-helpers
       - --disable-debug
       - --disable-doc
       - --disable-static
