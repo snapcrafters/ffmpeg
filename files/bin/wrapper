@@ -2,28 +2,27 @@
 
 WRAPPER=$(basename $0)
 
-case "$SNAP_ARCH" in
-    "amd64") ARCH='x86_64-linux-gnu'
-    ;;
-    "i386") ARCH='i386-linux-gnu'
-    ;;
-    *)
-        echo "Unsupported architecture for this app build"
-        exit 1
-    ;;
-esac
+if [ "${SNAP_ARCH}" == "amd64" ]; then
+  ARCH="x86_64-linux-gnu"
+elif [ "${SNAP_ARCH}" == "armhf" ]; then
+  ARCH="arm-linux-gnueabihf"
+elif [ "${SNAP_ARCH}" == "arm64" ]; then
+  ARCH="aarch64-linux-gnu"
+else
+  ARCH="${SNAP_ARCH}-linux-gnu"
+fi
 
 VENDOR=$(glxinfo | grep "OpenGL vendor")
 
 if [[ $VENDOR == *"Intel"* ]]; then
-  export VDPAU_DRIVER_PATH="$SNAP/usr/lib/$ARCH/dri"
-  export LIBVA_DRIVERS_PATH="$SNAP/usr/lib/$ARCH/dri"
+  export VDPAU_DRIVER_PATH="${SNAP}/usr/lib/$ARCH/dri"
+  export LIBVA_DRIVERS_PATH="${SNAP}/usr/lib/$ARCH/dri"
 fi
 
 if [[ $VENDOR == *"NVIDIA"* ]]; then
   export VDPAU_DRIVER_PATH="/var/lib/snapd/lib/gl/vdpau"
 elif [[ $VENDOR == *"X.Org"* ]]; then
-  export VDPAU_DRIVER_PATH="/usr/lib/$ARCH/vdpau/"
+  export VDPAU_DRIVER_PATH="/usr/lib/${ARCH}/vdpau/"
 fi
 
 exec $SNAP/usr/bin/$WRAPPER "$@"
