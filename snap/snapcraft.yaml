@@ -513,6 +513,7 @@ parts:
       - --enable-libfontconfig
       - --enable-libfreetype
       - --enable-libmp3lame
+      - --enable-libnpp
       - --enable-libopus
       #- --enable-libpulse
       - --enable-libspeex
