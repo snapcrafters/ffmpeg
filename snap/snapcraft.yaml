@@ -193,6 +193,7 @@ parts:
       - --disable-unit-tests
       - --as=yasm
     prime:
+      - usr/lib
       - -usr/include
       - -usr/lib/pkgconfig
     after:
@@ -520,6 +521,7 @@ parts:
       - --enable-libtwolame
       - --enable-libv4l2
       - --enable-libvorbis
+      - --enable-libvpx
       - --enable-libx264
       - --enable-libx265
       - --enable-libxcb
