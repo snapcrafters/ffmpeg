@@ -470,6 +470,7 @@ parts:
       - liblzma-dev
       - libomxil-bellagio-dev
       - libsctp-dev
+      - libsdl2-dev
       - libvdpau-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
@@ -528,6 +529,7 @@ parts:
       - --enable-omx
       - --enable-runtime-cpudetect
       - --enable-shared
+      - --enable-sdl2
       - --enable-vaapi
       - --enable-vdpau
       - --enable-version3
