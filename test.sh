@@ -38,7 +38,7 @@ function encode() {
 }
 
 sudo apt install -y ffmpeg vainfo nvidia-smi 2>/dev/null
-sudo snap install ffmpeg_latest_amd64.snap --dangerous
+sudo snap install ffmpeg_4.1_amd64.snap --dangerous
 sudo snap connect ffmpeg:camera
 sudo snap connect ffmpeg:hardware-observe
 
