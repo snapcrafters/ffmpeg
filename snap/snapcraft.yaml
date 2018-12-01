@@ -475,6 +475,7 @@ parts:
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
       - libxv-dev
+      - nvidia-cuda-dev
       - pkg-config
       - yasm
       - on amd64: [ libcrystalhd-dev ]
