@@ -475,10 +475,9 @@ parts:
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
       - libxv-dev
-      - nvidia-cuda-dev
       - pkg-config
       - yasm
-      - on amd64: [ libcrystalhd-dev ]
+      - on amd64: [ libcrystalhd-dev, nvidia-cuda-dev ]
       - on i386:  [ libcrystalhd-dev ]
     stage-packages:
       - i965-va-driver
