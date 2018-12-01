@@ -12,8 +12,6 @@ grade: stable
 confinement: strict
 
 parts:
-#### nv-codec-headers
-#
   nv-codec-headers:
     plugin: make
     source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.4/nv-codec-headers-8.2.15.4.tar.gz
@@ -21,16 +19,14 @@ parts:
       make install PREFIX=/usr
     build-packages:
       - pkg-config
-#
-####
 
-#### x264
-#
   nasm:
     plugin: autotools
-    source: https://www.nasm.us/pub/nasm/releasebuilds/2.13.03/nasm-2.13.03.tar.xz
+    source: https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.tar.gz
     configflags:
       - --prefix=/usr
+    prime:
+      - -*
 
   x264:
     plugin: autotools
@@ -47,12 +43,7 @@ parts:
       - libva-dev
     after:
       - nasm
-#
-####
 
-
-#### x265
-#
   x265:
     plugin: nil
     source: https://bitbucket.org/multicoreware/x265/downloads/x265_2.7.tar.gz
@@ -73,12 +64,7 @@ parts:
       make install
     prime:
       - usr/lib
-#
-####
 
-
-#### fdk-aac
-#
   fdk-aac:
     plugin: autotools
     source: https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz
@@ -90,93 +76,17 @@ parts:
     prime:
       - usr/lib
       - -usr/lib/pkgconfig
-#
-####
-
-
-#### lame
-#
-  lame:
-    plugin: autotools
-    source: http://downloads.sourceforge.net/lame/lame-3.100.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-      - --enable-nasm
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-    after:
-      - nasm
-#
-####
-
-
-#### twolame
-#
-  twolame:
-    plugin: autotools
-    source: http://downloads.sourceforge.net/twolame/twolame-0.3.13.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-    after:
-      - libsndfile
-#
-####
-
-
-#### opus
-#
-  opus:
-    plugin: autotools
-    source: https://ftp.osuosl.org/pub/xiph/releases/opus/opus-1.2.1.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-doc
-      - --disable-extra-programs
-      - --disable-static
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-#
-####
-
-
-#### libvpx
-#
-  libogg:
-    plugin: autotools
-    source: https://ftp.osuosl.org/pub/xiph/releases/ogg/libogg-1.3.3.tar.xz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share
-
-  libvorbis:
-    plugin: autotools
-    source: https://ftp.osuosl.org/pub/xiph/releases/vorbis/libvorbis-1.3.6.tar.xz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share
-    after:
-      - libogg
 
   libvpx:
     plugin: autotools
     source: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
     build-packages:
       - yasm
+    build-packages:
+      - libvorbis-dev
+    stage-packages:
+      - libvorbis0a
+      - libvorbisenc2
     configflags:
       - --prefix=/usr
       - --enable-shared
@@ -196,259 +106,7 @@ parts:
       - usr/lib
       - -usr/include
       - -usr/lib/pkgconfig
-    after:
-      - libvorbis
-#
-####
 
-
-#### libtheora
-#
-  libtheora:
-    plugin: autotools
-    source: https://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --enable-shared
-      - --disable-examples
-    override-build: |
-      # Patch libtheora so it compile with libpng16
-      sed -i 's/png_sizeof/sizeof/g' examples/png2theora.c
-      snapcraftctl build
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/doc
-    after:
-      - libvorbis
-      - libpng
-#
-####
-
-#### v4l-utils
-#
-  v4l-utils:
-    plugin: autotools
-    source: https://linuxtv.org/downloads/v4l-utils/v4l-utils-1.14.2.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --enable-shared
-      - --enable-libv4l
-      - --disable-libdvbv5
-      - --disable-qv4l2
-      - --disable-v4l-utils
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/sbin
-      - -usr/share/doc
-      - -usr/share/man
-    after:
-      - alsa-lib
-#
-####
-
-
-#### libpng
-#
-  zlib:
-    plugin: autotools
-    source: https://zlib.net/zlib-1.2.11.tar.gz
-    configflags:
-      - --prefix=/usr
-    prime:
-      - -usr/include
-      - -usr/lib/libz.a
-      - -usr/lib/pkgconfig
-      - -usr/share/doc
-      - -usr/share/man
-
-  libpng:
-    plugin: autotools
-    source: http://ftp-osl.osuosl.org/pub/libpng/src/libpng16/libpng-1.6.34.tar.xz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/doc
-      - -usr/share/man
-    after:
-      - zlib
-#
-####
-
-
-#### libass
-#
-  fribidi:
-    plugin: autotools
-    source: https://github.com/fribidi/fribidi/releases/download/v1.0.2/fribidi-1.0.2.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --disable-docs
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-
-  libass:
-    plugin: autotools
-    source: https://github.com/libass/libass/releases/download/0.14.0/libass-0.14.0.tar.xz
-    build-packages:
-      - libfontconfig1-dev
-      - libfreetype6-dev
-    stage-packages:
-      - libfontconfig1
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-    after:
-      - libpng
-      - fribidi
-      - nasm
-#
-####
-
-
-#### pulseaudio
-#
-  json-c:
-    plugin: autotools
-    source: https://github.com/json-c/json-c/archive/json-c-0.13-20171207.tar.gz
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-
-  alsa-lib:
-    plugin: autotools
-    source: https://ftp.osuosl.org/pub/blfs/conglomeration/alsa-lib/alsa-lib-1.1.6.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --sysconfdir=/etc
-      - --libexec=/usr/lib
-      - --libdir=/usr/lib
-      - --localstatedir=/var
-      - --with-configdir=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/share/alsa
-      - --with-plugindir=/snap/$SNAPCRAFT_PROJECT_NAME/current/usr/lib/alsa-lib
-      - --disable-static
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/alsa/alsa.conf
-      - -usr/share/alsa/pcm
-      - -usr/share/alsa/topology/broadwell
-
-  flac:
-    plugin: autotools
-    source: https://ftp.osuosl.org/pub/xiph/releases/flac/flac-1.3.2.tar.xz
-    build-packages:
-      - libtool
-    configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share
-    after:
-      - libogg
-      - libvorbis
-      - nasm
-
-  libsndfile:
-    plugin: autotools
-    source: https://github.com/erikd/libsndfile/archive/1.0.28.tar.gz
-    build-packages:
-      - autogen
-      - pkg-config
-      - python
-    configflags:
-      - --prefix=/usr
-      - --disable-sqlite
-      - --disable-static
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/doc
-      - -usr/share/man
-    after:
-      - alsa-lib
-      - flac
-      - libvorbis
-
-  pulseaudio:
-    plugin: autotools
-    source: https://github.com/pulseaudio/pulseaudio.git
-    source-tag: v12.2
-    override-build: |
-      NOCONFIGURE=1 ./bootstrap.sh
-      snapcraftctl build
-    build-packages:
-      - intltool
-      - libasyncns-dev
-      - libcap-dev
-      - libdbus-1-dev
-      - libglib2.0-dev
-      - libltdl-dev
-      - libspeex-dev
-      - libspeexdsp-dev
-      - libudev-dev
-      - pkg-config
-    stage-packages:
-      - libasyncns0
-      - libcap2
-      - libdbus-1-3
-      - libglib2.0-0
-      - libltdl7
-      - libspeex1
-      - libspeexdsp1
-      - libudev1
-    configflags:
-      - --prefix=/usr
-      - --disable-atomic-arm-linux-helpers
-      - --disable-bluez4
-      - --disable-bluez5
-      - --disable-default-build-tests
-      - --disable-esound
-      - --disable-gconf
-      - --disable-gtk3
-      - --disable-hal-compat
-      - --disable-rpath
-      - --disable-samplerate
-      - --disable-static
-      - --disable-tests
-      - --disable-x11
-    stage:
-      - usr/include
-      - usr/lib
-    prime:
-      - -usr/bin
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/bash-completion
-      - -usr/share/doc
-      - -usr/share/lintian
-      - -usr/share/man
-      - -usr/share/vala
-      - -usr/share/zsh
-    after:
-      - json-c
-      - libsndfile
-#
-####
 
   ffmpeg:
     plugin: autotools
@@ -466,11 +124,20 @@ parts:
       fi
       snapcraftctl set-version "$last_committed_tag_ver"
     build-packages:
+      - libass-dev
       - libbz2-dev
       - libdrm-dev
       - liblzma-dev
+      - libmp3lame-dev
       - libomxil-bellagio-dev
+      - libopenal-dev
+      - libopus-dev
+      - libpulse-dev
       - libsctp-dev
+      - libspeex-dev
+      - libtheora-dev
+      - libtwolame-dev
+      - libv4l-dev
       - libvdpau-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
@@ -484,7 +151,17 @@ parts:
       - on i386:  [ libcrystalhd-dev ]
     stage-packages:
       - i965-va-driver
+      - libass5
       - libdrm2
+      - libmp3lame0
+      - libopenal1
+      - libopus0
+      - libpulse0
+      - libspeex1
+      - libtheora0
+      - libtwolame0
+      - libv4l-0
+      - libv4l2rds0
       - libva-drm1
       - libvdpau-va-gl1
       - libx11-6
@@ -498,6 +175,7 @@ parts:
       - libxv1
       - mesa-va-drivers
       - mesa-vdpau-drivers
+      - ocl-icd-libopencl1
       - on amd64: [ libcrystalhd3 ]
       - on i386:  [ libcrystalhd3 ]
     configflags:
@@ -517,7 +195,7 @@ parts:
       - --enable-libfreetype
       - --enable-libmp3lame
       - --enable-libopus
-      #- --enable-libpulse
+      - --enable-libpulse
       - --enable-libspeex
       - --enable-libtheora
       - --enable-libtwolame
@@ -530,6 +208,7 @@ parts:
       - --enable-nonfree
       - --enable-nvenc
       - --enable-omx
+      - --enable-openal
       - --enable-opencl
       - --enable-runtime-cpudetect
       - --enable-shared
@@ -542,14 +221,7 @@ parts:
       - x264
       - x265
       - fdk-aac
-      - lame
-      - twolame
-      - opus
       - libvpx
-      - libtheora
-      - v4l-utils
-      - libass
-      - pulseaudio
     prime:
       - usr/bin
       - usr/lib
