@@ -475,6 +475,8 @@ parts:
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
       - libxv-dev
+      - ocl-icd-opencl-dev
+      - opencl-headers      
       - pkg-config
       - yasm
       - on amd64: [ libcrystalhd-dev ]
@@ -526,6 +528,7 @@ parts:
       - --enable-nonfree
       - --enable-nvenc
       - --enable-omx
+      - --enable-opencl
       - --enable-runtime-cpudetect
       - --enable-shared
       - --enable-vaapi
