@@ -13,8 +13,6 @@ Evaluate the following an enable where there is a common need to do so.
   - `--enable-libgme`
   - `--enable-libgsm`
   - `--enable-libiec61883`
-  - `--enable-libopencore_amrnb`
-  - `--enable-libopencore_amrwb`
   - `--enable-libopencv`
   - `--enable-libopenjpeg`
   - `--enable-libopenmpt`
@@ -28,12 +26,9 @@ Evaluate the following an enable where there is a common need to do so.
   - `--enable-libwavpack`
   - `--enable-libwebp`
   - `--enable-libxml2`
-  - `--enable-libxvid`
   - `--enable-libzmq`
   - `--enable-libzvbi`
-  - `--enable-openal`
   - `--enable-opengl`
-  - `--enable-sdl2`
 
 ## Raspberry Pi
 

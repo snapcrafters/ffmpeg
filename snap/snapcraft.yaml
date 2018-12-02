@@ -14,7 +14,7 @@ confinement: strict
 parts:
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.4/nv-codec-headers-8.2.15.4.tar.gz
+    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.6/nv-codec-headers-8.2.15.6.tar.gz
     override-build: |
       make install PREFIX=/usr
     build-packages:
@@ -30,7 +30,7 @@ parts:
 
   x264:
     plugin: autotools
-    source: http://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20181030-2245-stable.tar.bz2
+    source: http://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20181201-2245-stable.tar.bz2
     configflags:
       - --prefix=/usr
       - --disable-cli
@@ -46,17 +46,23 @@ parts:
 
   x265:
     plugin: nil
-    source: https://bitbucket.org/multicoreware/x265/downloads/x265_2.7.tar.gz
+    source: https://bitbucket.org/multicoreware/x265/downloads/x265_2.9.tar.gz
     build-packages:
       - cmake
       - yasm
-      - on amd64: [ libnuma-dev ]
-      - on i386:  [ libnuma-dev ]
-      - on arm64: [ libnuma-dev ]
+      - on amd64:
+        - libnuma-dev
+      - on i386:
+        - libnuma-dev
+      - on arm64:
+        - libnuma-dev
     stage-packages:
-      - on amd64: [ libnuma1 ]
-      - on i386:  [ libnuma1 ]
-      - on arm64: [ libnuma1 ]
+      - on amd64:
+        - libnuma1
+      - on i386:
+        - libnuma1
+      - on arm64:
+        - libnuma1
     override-build: |
       cd source
       cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr"
@@ -67,7 +73,7 @@ parts:
 
   fdk-aac:
     plugin: autotools
-    source: https://github.com/mstorsjo/fdk-aac/archive/v0.1.6.tar.gz
+    source: https://github.com/mstorsjo/fdk-aac/archive/v2.0.0.tar.gz
     build-packages:
       - g++
     configflags:
@@ -81,9 +87,8 @@ parts:
     plugin: autotools
     source: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
     build-packages:
-      - yasm
-    build-packages:
       - libvorbis-dev
+      - yasm
     stage-packages:
       - libvorbis0a
       - libvorbisenc2
@@ -131,9 +136,13 @@ parts:
       - libmp3lame-dev
       - libomxil-bellagio-dev
       - libopenal-dev
+      - libopencore-amrnb-dev
+      - libopencore-amrwb-dev
       - libopus-dev
       - libpulse-dev
       - libsctp-dev
+      - libsdl1.2-dev
+      - libsdl2-dev
       - libspeex-dev
       - libtheora-dev
       - libtwolame-dev
@@ -143,20 +152,26 @@ parts:
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
       - libxv-dev
+      - libxvidcore-dev
       - ocl-icd-opencl-dev
-      - opencl-headers      
+      - opencl-headers
       - pkg-config
       - yasm
-      - on amd64: [ libcrystalhd-dev ]
-      - on i386:  [ libcrystalhd-dev ]
+      - on amd64:
+        - libcrystalhd-dev
+      - on i386:
+        - libcrystalhd-dev
     stage-packages:
       - i965-va-driver
       - libass5
       - libdrm2
       - libmp3lame0
       - libopenal1
+      - libopencore-amrnb0
+      - libopencore-amrwb0
       - libopus0
       - libpulse0
+      - libsdl2-2.0-0
       - libspeex1
       - libtheora0
       - libtwolame0
@@ -173,11 +188,14 @@ parts:
       - libxdmcp6
       - libxext6
       - libxv1
+      - libxvidcore4
       - mesa-va-drivers
       - mesa-vdpau-drivers
       - ocl-icd-libopencl1
-      - on amd64: [ libcrystalhd3 ]
-      - on i386:  [ libcrystalhd3 ]
+      - on amd64:
+        - libcrystalhd3
+      - on i386:
+        - libcrystalhd3
     configflags:
       - --prefix=/usr
       - --disable-debug
@@ -194,8 +212,11 @@ parts:
       - --enable-libfontconfig
       - --enable-libfreetype
       - --enable-libmp3lame
+      - --enable-libopencore_amrnb
+      - --enable-libopencore_amrwb
       - --enable-libopus
       - --enable-libpulse
+      - --enable-sdl2
       - --enable-libspeex
       - --enable-libtheora
       - --enable-libtwolame
@@ -205,6 +226,7 @@ parts:
       - --enable-libx264
       - --enable-libx265
       - --enable-libxcb
+      - --enable-libxvid
       - --enable-nonfree
       - --enable-nvenc
       - --enable-omx
