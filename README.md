@@ -29,7 +29,6 @@ Evaluate the following an enable where there is a common need to do so.
   - `--enable-libzmq`
   - `--enable-libzvbi`
   - `--enable-opengl`
-  - `--enable-sdl2`
 
 ## Raspberry Pi
 
