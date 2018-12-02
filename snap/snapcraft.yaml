@@ -23,8 +23,17 @@ parts:
   nasm:
     plugin: autotools
     source: https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.tar.gz
-    configflags:
-      - --prefix=/usr
+    build-packages:
+      - dpkg-dev
+    override-build: |
+      # Only build and install nasm for x86 architectures.
+      ARCH=$(dpkg-architecture -q DEB_BUILD_ARCH)
+      if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then
+        ./autogen.sh
+        ./configure --prefix=/usr
+        make
+        make install
+      fi
     prime:
       - -*
 
@@ -49,7 +58,6 @@ parts:
     source: https://bitbucket.org/multicoreware/x265/downloads/x265_2.9.tar.gz
     build-packages:
       - cmake
-      - yasm
       - on amd64:
         - libnuma-dev
       - on i386:
@@ -66,10 +74,12 @@ parts:
     override-build: |
       cd source
       cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr"
-      make
+      make -j $(nproc)
       make install
     prime:
       - usr/lib
+    after:
+      - nasm
 
   fdk-aac:
     plugin: autotools
@@ -88,7 +98,10 @@ parts:
     source: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
     build-packages:
       - libvorbis-dev
-      - yasm
+      - on amd64:
+        - yasm
+      - on i386:
+        - yasm
     stage-packages:
       - libvorbis0a
       - libvorbisenc2
@@ -106,12 +119,10 @@ parts:
       - --disable-debug
       - --disable-static
       - --disable-unit-tests
-      - --as=yasm
     prime:
       - usr/lib
       - -usr/include
       - -usr/lib/pkgconfig
-
 
   ffmpeg:
     plugin: autotools
@@ -141,7 +152,6 @@ parts:
       - libopus-dev
       - libpulse-dev
       - libsctp-dev
-      - libsdl1.2-dev
       - libsdl2-dev
       - libspeex-dev
       - libtheora-dev
