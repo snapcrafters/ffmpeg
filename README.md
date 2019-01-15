@@ -70,3 +70,8 @@ else
   CONFIG += --enable-omx
 endif
 ```
+
+## Reference
+
+* [debian/rules · debian/master · Debian Multimedia Team / ffmpeg · GitLab](https://salsa.debian.org/multimedia-team/ffmpeg/blob/debian/master/debian/rules)
+
