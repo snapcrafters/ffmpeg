@@ -1,6 +1,10 @@
-# TODO
+# The FFmpeg snap
+[![Build Status](https://travis-ci.com/snapcrafters/ffmpeg.svg?branch=master)](https://travis-ci.com/snapcrafters/ffmpeg)  
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/ffmpeg)
 
-## General features
+## TODO
+
+### General features
 
 Evaluate the following an enable where there is a common need to do so.
 
@@ -30,7 +34,7 @@ Evaluate the following an enable where there is a common need to do so.
   - `--enable-libzvbi`
   - `--enable-opengl`
 
-## Raspberry Pi
+### Raspberry Pi
 
 Add support for the Raspberry Pi in the `armhf` builds.
 
@@ -66,3 +70,8 @@ else
   CONFIG += --enable-omx
 endif
 ```
+
+## Reference
+
+* [debian/rules · debian/master · Debian Multimedia Team / ffmpeg · GitLab](https://salsa.debian.org/multimedia-team/ffmpeg/blob/debian/master/debian/rules)
+
