@@ -37,10 +37,24 @@ function encode() {
   fi
 }
 
-sudo apt install -y ffmpeg vainfo nvidia-smi 2>/dev/null
-sudo snap install ffmpeg_4.1_amd64.snap --dangerous
-sudo snap connect ffmpeg:camera
-sudo snap connect ffmpeg:hardware-observe
+sudo apt install -y ffmpeg 2>/dev/null
+sudo apt install -y vainfo 2>/dev/null
+
+# Make sure the correct version of nvidia-smi is installed
+for NV_VER in 390 396 410 415; do
+  dpkg -s nvidia-driver-${NV_VER} &> /dev/null
+  if [ $? -eq 0 ]; then
+    echo "nvidia $NV_VER is installed"
+    sudo apt install -y nvidia-utils-${NV_VER} 2>/dev/null
+    break
+  fi
+done
+
+if [ -f ffmpeg_4.1_amd64.snap ]; then
+  sudo snap install ffmpeg_4.1_amd64.snap --dangerous
+  sudo snap connect ffmpeg:camera
+  sudo snap connect ffmpeg:hardware-observe
+fi
 
 for LOCATION in usr snap; do
   title "ffmpeg ${LOCATION} features"
