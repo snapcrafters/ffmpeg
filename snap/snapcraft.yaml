@@ -15,7 +15,7 @@ confinement: strict
 parts:
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.6/nv-codec-headers-8.2.15.6.tar.gz
+    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n8.2.15.7/nv-codec-headers-8.2.15.7.tar.gz
     override-build: |
       make install PREFIX=/usr
     build-packages:
