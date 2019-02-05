@@ -8,6 +8,7 @@ description: |
  up to the cutting edge. No matter if they were designed by some standards
  committee, the community or a corporation.
 
+base: core18
 grade: stable
 confinement: strict
 
@@ -20,67 +21,6 @@ parts:
     build-packages:
       - pkg-config
 
-  nasm:
-    plugin: autotools
-    source: https://www.nasm.us/pub/nasm/releasebuilds/2.14/nasm-2.14.tar.gz
-    build-packages:
-      - dpkg-dev
-    override-build: |
-      # Only build and install nasm for x86 architectures.
-      ARCH=$(dpkg-architecture -q DEB_BUILD_ARCH)
-      if [ "$ARCH" = "amd64" ] || [ "$ARCH" = "i386" ]; then
-        ./autogen.sh
-        ./configure --prefix=/usr
-        make
-        make install
-      fi
-    prime:
-      - -*
-
-  x264:
-    plugin: autotools
-    source: http://ftp.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20181201-2245-stable.tar.bz2
-    configflags:
-      - --prefix=/usr
-      - --disable-cli
-      - --enable-shared
-      - --enable-strip
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-    build-packages:
-      - libva-dev
-    after:
-      - nasm
-
-  x265:
-    plugin: nil
-    source: https://bitbucket.org/multicoreware/x265/downloads/x265_2.9.tar.gz
-    build-packages:
-      - cmake
-      - on amd64:
-        - libnuma-dev
-      - on i386:
-        - libnuma-dev
-      - on arm64:
-        - libnuma-dev
-    stage-packages:
-      - on amd64:
-        - libnuma1
-      - on i386:
-        - libnuma1
-      - on arm64:
-        - libnuma1
-    override-build: |
-      cd source
-      cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="/usr"
-      make -j $(nproc)
-      make install
-    prime:
-      - usr/lib
-    after:
-      - nasm
-
   fdk-aac:
     plugin: autotools
     source: https://github.com/mstorsjo/fdk-aac/archive/v2.0.0.tar.gz
@@ -91,37 +31,6 @@ parts:
       - --disable-static
     prime:
       - usr/lib
-      - -usr/lib/pkgconfig
-
-  libvpx:
-    plugin: autotools
-    source: https://github.com/webmproject/libvpx/archive/v1.7.0.tar.gz
-    build-packages:
-      - libvorbis-dev
-      - on amd64:
-        - yasm
-      - on i386:
-        - yasm
-    stage-packages:
-      - libvorbis0a
-      - libvorbisenc2
-    configflags:
-      - --prefix=/usr
-      - --enable-shared
-      - --enable-postproc
-      - --enable-runtime-cpu-detect
-      - --enable-vp8
-      - --enable-vp9
-      - --enable-vp9-highbitdepth
-      - --enable-vp9-postproc
-      - --disable-examples
-      - --disable-debug-libs
-      - --disable-debug
-      - --disable-static
-      - --disable-unit-tests
-    prime:
-      - usr/lib
-      - -usr/include
       - -usr/lib/pkgconfig
 
   ffmpeg:
@@ -156,8 +65,13 @@ parts:
       - libspeex-dev
       - libtheora-dev
       - libtwolame-dev
+      - libva-dev
       - libv4l-dev
       - libvdpau-dev
+      - libvorbis-dev
+      - libvpx-dev
+      - libx264-dev
+      - libx265-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
@@ -173,7 +87,7 @@ parts:
         - libcrystalhd-dev
     stage-packages:
       - i965-va-driver
-      - libass5
+      - libass9
       - libdrm2
       - libmp3lame0
       - libopenal1
@@ -187,8 +101,15 @@ parts:
       - libtwolame0
       - libv4l-0
       - libv4l2rds0
-      - libva-drm1
+      - libva-drm2
+      - libva-glx2
+      - libva-wayland2
       - libvdpau-va-gl1
+      - libvorbis0a
+      - libvorbisenc2
+      - libvpx5
+      - libx264-152
+      - libx265-146
       - libx11-6
       - libxau6
       - libxcb-shape0
@@ -250,10 +171,7 @@ parts:
       - --enable-xlib
     after:
       - nv-codec-headers
-      - x264
-      - x265
       - fdk-aac
-      - libvpx
     prime:
       - usr/bin
       - usr/lib
