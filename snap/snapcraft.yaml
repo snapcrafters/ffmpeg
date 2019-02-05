@@ -52,6 +52,7 @@ parts:
       - libass-dev
       - libbz2-dev
       - libdrm-dev
+      - libgnutls28-dev
       - liblzma-dev
       - libmp3lame-dev
       - libomxil-bellagio-dev
@@ -89,6 +90,7 @@ parts:
       - i965-va-driver
       - libass9
       - libdrm2
+      - libgnutls30
       - libmp3lame0
       - libopenal1
       - libopencore-amrnb0
@@ -137,6 +139,7 @@ parts:
       - --enable-cuvid
       - --enable-libdrm
       - --enable-ffplay
+      - --enable-gnutls
       - --enable-gpl
       - --enable-libass
       - --enable-libfdk-aac
