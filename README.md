@@ -8,7 +8,6 @@
 
 Evaluate the following an enable where there is a common need to do so.
 
-  - `--enable-gnutls`
   - `--enable-ladspa`
   - `--enable-libbluray`
   - `--enable-libcaca`
