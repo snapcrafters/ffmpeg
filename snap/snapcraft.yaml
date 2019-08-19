@@ -87,7 +87,10 @@ parts:
       - on i386:
         - libcrystalhd-dev
     stage-packages:
-      - i965-va-driver
+      - on amd64:
+          - i965-va-driver
+      - on i386:
+          - i965-va-driver
       - libass9
       - libdrm2
       - libgnutls30
