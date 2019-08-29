@@ -87,10 +87,6 @@ parts:
       - on i386:
         - libcrystalhd-dev
     stage-packages:
-      - on amd64:
-          - i965-va-driver
-      - on i386:
-          - i965-va-driver
       - libass9
       - libdrm2
       - libgnutls30
@@ -129,8 +125,10 @@ parts:
       - mesa-vdpau-drivers
       - ocl-icd-libopencl1
       - on amd64:
+        - i965-va-driver
         - libcrystalhd3
       - on i386:
+        - i965-va-driver
         - libcrystalhd3
     configflags:
       - --prefix=/usr
