@@ -31,7 +31,8 @@ parts:
       - --disable-static
     prime:
       - usr/lib
-      - -usr/lib/pkgconfig
+      - usr/lib/pkgconfig
+      - usr/include
 
   ffmpeg:
     plugin: autotools
@@ -179,8 +180,8 @@ parts:
     prime:
       - usr/bin
       - usr/lib
-      - -usr/lib/pkgconfig
-      - -usr/include
+      - usr/lib/pkgconfig
+      - usr/include
       - -usr/share/doc
       - -usr/share/man
 
