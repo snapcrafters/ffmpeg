@@ -85,6 +85,8 @@ parts:
       - yasm
       - on amd64:
         - libcrystalhd-dev
+        - nvidia-cuda-dev
+        - nvidia-cuda-toolkit
       - on i386:
         - libcrystalhd-dev
     stage-packages:
@@ -128,6 +130,9 @@ parts:
       - on amd64:
         - i965-va-driver
         - libcrystalhd3
+        - libnppig9.1
+        - libnppicc9.1
+        - libnppidei9.1
       - on i386:
         - i965-va-driver
         - libcrystalhd3
@@ -138,6 +143,7 @@ parts:
       - --disable-static
       - --enable-avisynth
       - --enable-cuda
+      - --enable-cuda-sdk
       - --enable-cuvid
       - --enable-libdrm
       - --enable-ffplay
@@ -148,6 +154,7 @@ parts:
       - --enable-libfontconfig
       - --enable-libfreetype
       - --enable-libmp3lame
+      - --enable-libnpp
       - --enable-libopencore_amrnb
       - --enable-libopencore_amrwb
       - --enable-libopus
