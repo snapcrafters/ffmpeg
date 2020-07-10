@@ -141,7 +141,6 @@ parts:
       - --disable-debug
       - --disable-doc
       - --disable-static
-      - --enable-avisynth
       - --enable-cuda
       - --enable-cuda-sdk
       - --enable-cuvid
