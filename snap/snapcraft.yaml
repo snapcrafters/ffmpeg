@@ -15,7 +15,7 @@ confinement: strict
 parts:
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n9.1.23.1/nv-codec-headers-9.1.23.1.tar.gz
+    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n10.0.26.0/nv-codec-headers-10.0.26.0.tar.gz
     override-build: |
       make install PREFIX=/usr
     build-packages:
@@ -23,7 +23,7 @@ parts:
 
   fdk-aac:
     plugin: autotools
-    source: https://github.com/mstorsjo/fdk-aac/archive/v2.0.0.tar.gz
+    source: https://github.com/mstorsjo/fdk-aac/archive/v2.0.1.tar.gz
     build-packages:
       - g++
     configflags:
@@ -217,6 +217,8 @@ apps:
       # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
     plugs:
+      - audio-playback
+      - audio-record
       - alsa
       - camera
       - desktop
@@ -242,6 +244,8 @@ apps:
       # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
     plugs:
+      - audio-playback
+      - audio-record
       - alsa
       - camera
       - desktop
@@ -267,6 +271,8 @@ apps:
       # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
       LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
     plugs:
+      - audio-playback
+      - audio-record
       - alsa
       - camera
       - desktop
