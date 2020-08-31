@@ -15,10 +15,16 @@ confinement: strict
 parts:
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n10.0.26.0/nv-codec-headers-10.0.26.0.tar.gz
-    override-build: |
-      make install PREFIX=/usr
+    source: https://github.com/FFmpeg/nv-codec-headers.git
+    source-tag: 'n9.1.23.1'
+    make-parameters:
+      - PREFIX=/usr
+    build-environment:
+      - CC: gcc-8
+      - CCX: g++-8
     build-packages:
+      - gcc-8
+      - g++-8
       - pkg-config
 
   fdk-aac:
