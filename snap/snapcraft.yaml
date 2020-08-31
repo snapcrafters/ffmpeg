@@ -61,6 +61,7 @@ parts:
       - libbz2-dev
       - libcaca-dev
       - libcdio-paranoia-dev
+      - libchromaprint-dev
       - libdrm-dev
       - libgme-dev
       - libgnutls28-dev
@@ -118,6 +119,7 @@ parts:
       - libbs2b0
       - libcaca0
       - libcdio-paranoia2
+      - libchromaprint1
       - libdrm2
       - libflite1
       - libgme0
@@ -192,6 +194,7 @@ parts:
       --disable-libfdk-aac \
       --disable-static \
       --enable-avisynth \
+      --enable-chromaprint \
       --enable-ffplay \
       --enable-gnutls \
       --enable-gpl \
