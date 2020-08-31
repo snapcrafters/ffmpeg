@@ -142,56 +142,61 @@ parts:
       - on i386:
         - i965-va-driver
         - libcrystalhd3
-    configflags:
-      - --prefix=/usr
-      - --disable-debug
-      - --disable-doc
-      - --disable-libfdk-aac
-      - --disable-static
-      - --enable-avisynth
-      - --enable-cuda
-      - --enable-cuda-sdk
-      - --enable-cuvid
-      - --enable-libdrm
-      - --enable-ffplay
-      - --enable-gnutls
-      - --enable-gpl
-      - --enable-libass
-      - --enable-libfontconfig
-      - --enable-libfreetype
-      - --enable-libmp3lame
-      - --enable-libnpp
-      - --enable-libopencore_amrnb
-      - --enable-libopencore_amrwb
-      - --enable-libopus
-      - --enable-libpulse
-      - --enable-sdl2
-      - --enable-libspeex
-      - --enable-libtheora
-      - --enable-libtwolame
-      - --enable-libv4l2
-      - --enable-libvorbis
-      - --enable-libvpx
-      - --enable-libx264
-      - --enable-libx265
-      - --enable-libxcb
-      - --enable-libxvid
-      - --enable-nonfree
-      - --enable-nvenc
-      - --enable-omx
-      - --enable-openal
-      - --enable-opencl
-      - --enable-runtime-cpudetect
-      - --enable-librsvg
-      - --enable-shared
-      - --enable-vaapi
-      - --enable-vdpau
-      - --enable-version3
-      - --enable-xlib
+    override-build: |
+      ARCHITECTURE=$(dpkg --print-architecture)
+      if [ "${ARCHITECTURE}" = "amd64" ]; then
+        EXTRA="--enable-cuda --enable-cuda-sdk --enable-cuvid --enable-libnpp"
+      else
+        EXTRA=""
+      fi
+      ./configure \
+      --prefix=/usr \
+      --disable-debug \
+      --disable-doc \
+      --disable-libfdk-aac \
+      --disable-static \
+      --enable-avisynth \
+      --enable-libdrm \
+      --enable-ffplay \
+      --enable-gnutls \
+      --enable-gpl \
+      --enable-libass \
+      --enable-libfontconfig \
+      --enable-libfreetype \
+      --enable-libmp3lame \
+      --enable-libopencore_amrnb \
+      --enable-libopencore_amrwb \
+      --enable-opengl \
+      --enable-libopus \
+      --enable-libpulse \
+      --enable-sdl2 \
+      --enable-libspeex \
+      --enable-libtheora \
+      --enable-libtwolame \
+      --enable-libv4l2 \
+      --enable-libvorbis \
+      --enable-libvpx \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-libxcb \
+      --enable-libxvid \
+      --enable-nonfree \
+      --enable-nvenc \
+      --enable-omx \
+      --enable-openal \
+      --enable-opencl \
+      --enable-runtime-cpudetect \
+      --enable-librsvg \
+      --enable-shared \
+      --enable-vaapi \
+      --enable-vdpau \
+      --enable-version3 \
+      --enable-xlib ${EXTRA}
+      make
+      make install
     prime:
       - usr/bin
       - usr/lib
-      - usr/lib/pkgconfig
       - usr/include
       - -usr/share/doc
       - -usr/share/man
