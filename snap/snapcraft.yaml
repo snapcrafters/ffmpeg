@@ -70,6 +70,7 @@ parts:
       - libopencore-amrnb-dev
       - libopencore-amrwb-dev
       - libopenjp2-7-dev
+      - libopenmpt-dev
       - libopus-dev
       - libpulse-dev
       - librsvg2-dev
@@ -114,6 +115,7 @@ parts:
       - libopencore-amrnb0
       - libopencore-amrwb0
       - libopenjp2-7
+      - libopenmpt0
       - libopus0
       - libpulse0
       - librsvg2-2
@@ -184,6 +186,7 @@ parts:
       --enable-libopencore_amrnb \
       --enable-libopencore_amrwb \
       --enable-libopenjpeg \
+      --enable-libopenmpt \
       --enable-libopus \
       --enable-libpulse \
       --enable-librsvg \
