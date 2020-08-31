@@ -156,20 +156,20 @@ parts:
       --disable-libfdk-aac \
       --disable-static \
       --enable-avisynth \
-      --enable-libdrm \
       --enable-ffplay \
       --enable-gnutls \
       --enable-gpl \
       --enable-libass \
+      --enable-libdrm \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libmp3lame \
       --enable-libopencore_amrnb \
       --enable-libopencore_amrwb \
-      --enable-opengl \
+      --enable-libopenjpeg \
       --enable-libopus \
       --enable-libpulse \
-      --enable-sdl2 \
+      --enable-librsvg \
       --enable-libspeex \
       --enable-libtheora \
       --enable-libtwolame \
@@ -185,8 +185,9 @@ parts:
       --enable-omx \
       --enable-openal \
       --enable-opencl \
+      --enable-opengl \
       --enable-runtime-cpudetect \
-      --enable-librsvg \
+      --enable-sdl2 \
       --enable-shared \
       --enable-vaapi \
       --enable-vdpau \
