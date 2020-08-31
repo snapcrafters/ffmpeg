@@ -58,6 +58,7 @@ parts:
       - libass-dev
       - libbz2-dev
       - libcaca-dev
+      - libcdio-paranoia-dev
       - libdrm-dev
       - libgnutls28-dev
       - liblzma-dev
@@ -99,6 +100,7 @@ parts:
     stage-packages:
       - libass9
       - libcaca0
+      - libcdio-paranoia2
       - libdrm2
       - libflite1
       - libgnutls30
@@ -165,6 +167,7 @@ parts:
       --enable-gpl \
       --enable-libass \
       --enable-libcaca \
+      --enable-libcdio \
       --enable-libdrm \
       --enable-libflite \
       --enable-libfontconfig \
