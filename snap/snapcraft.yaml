@@ -80,6 +80,7 @@ parts:
       - libsnappy-dev
       - libsoxr-dev
       - libspeex-dev
+      - libtesseract-dev
       - libtheora-dev
       - libtwolame-dev
       - libva-dev
@@ -127,6 +128,7 @@ parts:
       - libsnappy1v5
       - libsoxr0
       - libspeex1
+      - libtesseract4
       - libtheora0
       - libtwolame0
       - libv4l-0
@@ -200,6 +202,7 @@ parts:
       --enable-libsnappy \
       --enable-libsoxr \
       --enable-libspeex \
+      --enable-libtesseract \
       --enable-libtheora \
       --enable-libtwolame \
       --enable-libv4l2 \
