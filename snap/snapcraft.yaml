@@ -74,6 +74,7 @@ parts:
       - libopus-dev
       - libpulse-dev
       - librsvg2-dev
+      - librubberband-dev
       - libsctp-dev
       - libsdl2-dev
       - libspeex-dev
@@ -119,6 +120,7 @@ parts:
       - libopus0
       - libpulse0
       - librsvg2-2
+      - librubberband2
       - libsdl2-2.0-0
       - libspeex1
       - libtheora0
@@ -190,6 +192,7 @@ parts:
       --enable-libopus \
       --enable-libpulse \
       --enable-librsvg \
+      --enable-librubberband \
       --enable-libspeex \
       --enable-libtheora \
       --enable-libtwolame \
