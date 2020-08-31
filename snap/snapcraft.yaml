@@ -83,6 +83,7 @@ parts:
       - librubberband-dev
       - libsctp-dev
       - libsdl2-dev
+      - libshine-dev
       - libsnappy-dev
       - libsoxr-dev
       - libspeex-dev
@@ -142,6 +143,7 @@ parts:
       - librsvg2-2
       - librubberband2
       - libsdl2-2.0-0
+      - libshine3
       - libsnappy1v5
       - libsoxr0
       - libspeex1
@@ -227,6 +229,7 @@ parts:
       --enable-libpulse \
       --enable-librsvg \
       --enable-librubberband \
+      --enable-libshine \
       --enable-libsnappy \
       --enable-libsoxr \
       --enable-libspeex \
