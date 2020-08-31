@@ -78,6 +78,7 @@ parts:
       - libsctp-dev
       - libsdl2-dev
       - libsnappy-dev
+      - libsoxr-dev
       - libspeex-dev
       - libtheora-dev
       - libtwolame-dev
@@ -124,6 +125,7 @@ parts:
       - librubberband2
       - libsdl2-2.0-0
       - libsnappy1v5
+      - libsoxr0
       - libspeex1
       - libtheora0
       - libtwolame0
@@ -196,6 +198,7 @@ parts:
       --enable-librsvg \
       --enable-librubberband \
       --enable-libsnappy \
+      --enable-libsoxr \
       --enable-libspeex \
       --enable-libtheora \
       --enable-libtwolame \
