@@ -45,7 +45,12 @@ parts:
     source: https://github.com/FFmpeg/FFmpeg.git
     source-branch: release/4.3
     source-depth: 1
+    build-environment:
+      - CC: gcc-8
+      - CCX: g++-8
     build-packages:
+      - gcc-8
+      - g++-8
       - libass-dev
       - libbz2-dev
       - libdrm-dev
