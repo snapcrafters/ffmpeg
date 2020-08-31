@@ -57,6 +57,7 @@ parts:
       - g++-8
       - libass-dev
       - libbz2-dev
+      - libcaca-dev
       - libdrm-dev
       - libgnutls28-dev
       - liblzma-dev
@@ -97,6 +98,7 @@ parts:
         - libcrystalhd-dev
     stage-packages:
       - libass9
+      - libcaca0
       - libdrm2
       - libflite1
       - libgnutls30
@@ -162,6 +164,7 @@ parts:
       --enable-gnutls \
       --enable-gpl \
       --enable-libass \
+      --enable-libcaca \
       --enable-libdrm \
       --enable-libflite \
       --enable-libfontconfig \
