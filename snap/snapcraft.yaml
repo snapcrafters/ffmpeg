@@ -201,8 +201,6 @@ parts:
   ffmpeg-wrapper:
     plugin: dump
     source: files
-    stage-packages:
-      - mesa-utils
     organize:
       'ffplay': bin/
       'ffmpeg': bin/

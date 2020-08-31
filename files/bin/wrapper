@@ -14,15 +14,9 @@ else
   ARCH="${SNAP_ARCH}-linux-gnu"
 fi
 
-VENDOR=$(glxinfo | grep "OpenGL vendor")
-
-if [[ $VENDOR == *"Intel"* ]]; then
-  export VDPAU_DRIVER_PATH="${SNAP}/usr/lib/$ARCH/dri"
-fi
-
-if [[ $VENDOR == *"NVIDIA"* ]]; then
+if [ -e "/var/lib/snapd/lib/gl/xorg/nvidia_drv.so" ]; then
   export VDPAU_DRIVER_PATH="/var/lib/snapd/lib/gl/vdpau"
-elif [[ $VENDOR == *"X.Org"* ]]; then
+else
   export VDPAU_DRIVER_PATH="/usr/lib/${ARCH}/vdpau/"
 fi
 
