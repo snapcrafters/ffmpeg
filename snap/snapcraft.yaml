@@ -52,6 +52,7 @@ parts:
       - CC: gcc-8
       - CCX: g++-8
     build-packages:
+      - flite1-dev
       - gcc-8
       - g++-8
       - libass-dev
@@ -97,6 +98,7 @@ parts:
     stage-packages:
       - libass9
       - libdrm2
+      - libflite1
       - libgnutls30
       - libmp3lame0
       - libopenal1
@@ -161,6 +163,7 @@ parts:
       --enable-gpl \
       --enable-libass \
       --enable-libdrm \
+      --enable-libflite \
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libmp3lame \
