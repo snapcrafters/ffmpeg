@@ -65,6 +65,7 @@ parts:
       - libcodec2-dev
       - libdc1394-22-dev
       - libdrm-dev
+      - libfribidi-dev
       - libgme-dev
       - libgnutls28-dev
       - libgsm1-dev
@@ -126,6 +127,7 @@ parts:
       - libdc1394-22
       - libdrm2
       - libflite1
+      - libfribidi0
       - libgme0
       - libgnutls30
       - libgsm1
@@ -212,6 +214,7 @@ parts:
       --enable-libdrm \
       --enable-libflite \
       --enable-libfontconfig \
+      --enable-libfribidi \
       --enable-libfreetype \
       --enable-libgme \
       --enable-libgsm \
