@@ -24,7 +24,6 @@ Evaluate the following an enable where there is a common need to do so.
   - `--enable-libsoxr`
   - `--enable-libssh`
   - `--enable-libtesseract`
-  - `--enable-librsvg`
   - `--enable-libvo_amrwbenc`
   - `--enable-libwavpack`
   - `--enable-libwebp`
