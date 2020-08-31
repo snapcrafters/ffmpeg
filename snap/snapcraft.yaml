@@ -62,6 +62,7 @@ parts:
       - libdrm-dev
       - libgme-dev
       - libgnutls28-dev
+      - libgsm1-dev
       - liblzma-dev
       - libmp3lame-dev
       - libomxil-bellagio-dev
@@ -106,6 +107,7 @@ parts:
       - libflite1
       - libgme0
       - libgnutls30
+      - libgsm1
       - libmp3lame0
       - libopenal1
       - libopencore-amrnb0
@@ -175,6 +177,7 @@ parts:
       --enable-libfontconfig \
       --enable-libfreetype \
       --enable-libgme \
+      --enable-libgsm \
       --enable-libmp3lame \
       --enable-libopencore_amrnb \
       --enable-libopencore_amrwb \
