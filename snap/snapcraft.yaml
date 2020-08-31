@@ -41,6 +41,9 @@ parts:
       - g++-8
 
   ffmpeg:
+    after:
+      - avisynth-plus
+      - nv-codec-headers
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
     source-branch: release/4.3
@@ -187,9 +190,6 @@ parts:
       - --enable-vdpau
       - --enable-version3
       - --enable-xlib
-    after:
-      - avisynth-plus
-      - nv-codec-headers
     prime:
       - usr/bin
       - usr/lib
@@ -199,6 +199,8 @@ parts:
       - -usr/share/man
 
   ffmpeg-wrapper:
+    after:
+      - ffmpeg
     plugin: dump
     source: files
     organize:
@@ -206,8 +208,6 @@ parts:
       'ffmpeg': bin/
       'ffprobe': bin/
       'wrapper': bin/
-    after:
-      - ffmpeg
 
   cleanup:
     after:
