@@ -87,6 +87,7 @@ parts:
       - libsnappy-dev
       - libsoxr-dev
       - libspeex-dev
+      - libssh-gcrypt-dev
       - libtesseract-dev
       - libtheora-dev
       - libtwolame-dev
@@ -147,6 +148,7 @@ parts:
       - libsnappy1v5
       - libsoxr0
       - libspeex1
+      - libssh-gcrypt-4
       - libtesseract4
       - libtheora0
       - libtwolame0
@@ -233,6 +235,7 @@ parts:
       --enable-libsnappy \
       --enable-libsoxr \
       --enable-libspeex \
+      --enable-libssh \
       --enable-libtesseract \
       --enable-libtheora \
       --enable-libtwolame \
