@@ -63,6 +63,7 @@ parts:
       - libcdio-paranoia-dev
       - libchromaprint-dev
       - libcodec2-dev
+      - libdc1394-22-dev
       - libdrm-dev
       - libgme-dev
       - libgnutls28-dev
@@ -122,6 +123,7 @@ parts:
       - libcdio-paranoia2
       - libchromaprint1
       - libcodec2-0.7
+      - libdc1394-22
       - libdrm2
       - libflite1
       - libgme0
@@ -206,6 +208,7 @@ parts:
       --enable-libcaca \
       --enable-libcdio \
       --enable-libcodec2 \
+      --enable-libdc1394 \
       --enable-libdrm \
       --enable-libflite \
       --enable-libfontconfig \
