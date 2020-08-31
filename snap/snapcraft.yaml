@@ -96,6 +96,7 @@ parts:
       - libxcb-shape0-dev
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
+      - libxml2-dev
       - libxv-dev
       - libxvidcore-dev
       - ocl-icd-opencl-dev
@@ -156,6 +157,7 @@ parts:
       - libxcb1
       - libxdmcp6
       - libxext6
+      - libxml2
       - libxv1
       - libxvidcore4
       - mesa-va-drivers
@@ -220,6 +222,7 @@ parts:
       --enable-libx264 \
       --enable-libx265 \
       --enable-libxcb \
+      --enable-libxml2 \
       --enable-libxvid \
       --enable-nonfree \
       --enable-nvenc \
