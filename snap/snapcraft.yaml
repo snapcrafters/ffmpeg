@@ -89,6 +89,7 @@ parts:
       - libvo-amrwbenc-dev
       - libvorbis-dev
       - libvpx-dev
+      - libwavpack-dev
       - libx264-dev
       - libx265-dev
       - libxcb-shape0-dev
@@ -142,6 +143,7 @@ parts:
       - libvorbis0a
       - libvorbisenc2
       - libvpx5
+      - libwavpack1
       - libx264-152
       - libx265-146
       - libx11-6
@@ -211,6 +213,7 @@ parts:
       --enable-libvo_amrwbenc \
       --enable-libvorbis \
       --enable-libvpx \
+      --enable-libwavpack \
       --enable-libx264 \
       --enable-libx265 \
       --enable-libxcb \
