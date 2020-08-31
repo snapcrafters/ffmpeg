@@ -57,6 +57,7 @@ parts:
       - g++-8
       - libass-dev
       - libbs2b-dev
+      - libbluray-dev
       - libbz2-dev
       - libcaca-dev
       - libcdio-paranoia-dev
@@ -113,6 +114,7 @@ parts:
         - libcrystalhd-dev
     stage-packages:
       - libass9
+      - libbluray2
       - libbs2b0
       - libcaca0
       - libcdio-paranoia2
@@ -194,6 +196,7 @@ parts:
       --enable-gnutls \
       --enable-gpl \
       --enable-libass \
+      --enable-libbluray \
       --enable-libbs2b \
       --enable-libcaca \
       --enable-libcdio \
