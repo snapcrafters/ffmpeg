@@ -99,6 +99,7 @@ parts:
       - libxml2-dev
       - libxv-dev
       - libxvidcore-dev
+      - libzvbi-dev
       - ocl-icd-opencl-dev
       - opencl-headers
       - pkg-config
@@ -160,6 +161,7 @@ parts:
       - libxml2
       - libxv1
       - libxvidcore4
+      - libzvbi0
       - mesa-va-drivers
       - mesa-vdpau-drivers
       - ocl-icd-libopencl1
@@ -224,6 +226,7 @@ parts:
       --enable-libxcb \
       --enable-libxml2 \
       --enable-libxvid \
+      --enable-libzvbi \
       --enable-nonfree \
       --enable-nvenc \
       --enable-omx \
