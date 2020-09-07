@@ -44,6 +44,7 @@ parts:
 
   avisynth-plus:
     plugin: cmake
+    after: [ nv-codec-headers ]
     source: https://github.com/AviSynth/AviSynthPlus.git
     source-tag: 'v3.6.1'
     configflags:
