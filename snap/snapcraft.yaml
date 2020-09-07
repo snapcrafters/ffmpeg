@@ -136,6 +136,7 @@ parts:
       - on i386:
         - libcrystalhd-dev
     stage-packages:
+      - freeglut3
       - libass9
       - libbluray2
       - libbs2b0
@@ -147,6 +148,7 @@ parts:
       - libdrm2
       - libflite1
       - libfribidi0
+      - libglu1-mesa
       - libgme0
       - libgnutls30
       - libgsm1
@@ -162,6 +164,7 @@ parts:
       - librubberband2
       - libsdl2-2.0-0
       - libshine3
+      - libslang2
       - libsnappy1v5
       - libsoxr0
       - libspeex1
@@ -169,6 +172,7 @@ parts:
       - libtesseract4
       - libtheora0
       - libtwolame0
+      - libusb-1.0-0
       - libv4l-0
       - libv4l2rds0
       - libva-drm2
@@ -288,12 +292,6 @@ parts:
       --enable-xlib ${EXTRA}
       make
       make install
-    prime:
-      - usr/bin
-      - usr/lib
-      - usr/include
-      - -usr/share/doc
-      - -usr/share/man
 
   ffmpeg-wrapper:
     plugin: dump
