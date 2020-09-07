@@ -12,6 +12,10 @@ base: core18
 grade: stable
 confinement: strict
 
+layout:
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
+
 parts:
   desktop-glib-only:
     plugin: make
