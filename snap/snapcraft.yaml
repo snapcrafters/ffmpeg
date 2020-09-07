@@ -200,17 +200,16 @@ parts:
       - libxvidcore4
       - libzmq5
       - libzvbi0
-      - mesa-va-drivers
       - mesa-vdpau-drivers
       - ocl-icd-libopencl1
       - on amd64:
-        - i965-va-driver
+        - mesa-va-drivers
         - libcrystalhd3
         - libnppig9.1
         - libnppicc9.1
         - libnppidei9.1
       - on i386:
-        - i965-va-driver
+        - mesa-va-drivers
         - libcrystalhd3
     override-build: |
       ARCHITECTURE=$(dpkg --print-architecture)
