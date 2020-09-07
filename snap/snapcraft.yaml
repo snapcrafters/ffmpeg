@@ -305,16 +305,15 @@ parts:
       ffmpeg-wrapper: bin/
 
   cleanup:
-    after:
-      - ffmpeg-wrapper
     plugin: nil
+    after: [ ffmpeg-wrapper ]
     override-prime: |
-      set -eux
-      for CRUFT in usr/include usr/share/bug usr/share/lintian usr/share/man; do
+      for CRUFT in usr/share/bug usr/share/lintian usr/share/man; do
         rm -rf ${SNAPCRAFT_PRIME}/${CRUFT}
       done
       find ${SNAPCRAFT_PRIME}/usr/share/doc/ -type f -not -name 'copyright' -delete || true
-      rm -v ${SNAPCRAFT_PRIME}/usr/share/doc/*/changelog.Debian.gz || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/*.gz 2>/dev/null || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/README* 2>/dev/null || true
       find ${SNAPCRAFT_PRIME}/usr/share -type d -empty -delete || true
 
 apps:
