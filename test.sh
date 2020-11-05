@@ -41,7 +41,7 @@ sudo apt install -y ffmpeg 2>/dev/null
 sudo apt install -y vainfo 2>/dev/null
 
 # Make sure the correct version of nvidia-smi is installed
-for NV_VER in 390 396 410 415 418; do
+for NV_VER in 390 396 410 415 418 440; do
   dpkg -s nvidia-driver-${NV_VER} &> /dev/null
   if [ $? -eq 0 ]; then
     echo "nvidia $NV_VER is installed"

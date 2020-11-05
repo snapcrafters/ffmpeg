@@ -1,5 +1,5 @@
 name: ffmpeg
-adopt-info: ffmpeg
+version: '4.3.1'
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
@@ -12,73 +12,120 @@ base: core18
 grade: stable
 confinement: strict
 
+layout:
+  /usr/share/alsa:
+    bind: $SNAP/usr/share/alsa
+
 parts:
+  desktop-glib-only:
+    plugin: make
+    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
+    source-subdir: glib-only
+    build-packages:
+      - libglib2.0-dev
+    stage-packages:
+      - libglib2.0-bin
+      - shared-mime-info
+
   nv-codec-headers:
     plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers/releases/download/n10.0.26.0/nv-codec-headers-10.0.26.0.tar.gz
-    override-build: |
-      make install PREFIX=/usr
+    after: [ desktop-glib-only ]
+    source: https://github.com/FFmpeg/nv-codec-headers.git
+    source-branch: 'sdk/9.1'
+    make-parameters:
+      - PREFIX=/usr
+    build-environment:
+      - CC: gcc-8
+      - CCX: g++-8
     build-packages:
+      - gcc-8
+      - g++-8
       - pkg-config
 
-  fdk-aac:
-    plugin: autotools
-    source: https://github.com/mstorsjo/fdk-aac/archive/v2.0.1.tar.gz
-    build-packages:
-      - g++
+  avisynth-plus:
+    plugin: cmake
+    after: [ nv-codec-headers ]
+    source: https://github.com/AviSynth/AviSynthPlus.git
+    source-tag: 'v3.6.1'
     configflags:
-      - --prefix=/usr
-      - --disable-static
-    prime:
-      - usr/lib
-      - usr/lib/pkgconfig
-      - usr/include
+      - -DCMAKE_C_COMPILER=gcc-8
+      - -DCMAKE_CXX_COMPILER=g++-8
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+    build-packages:
+      - gcc-8
+      - g++-8
 
   ffmpeg:
+    after:
+      - avisynth-plus
+      - desktop-glib-only
+      - nv-codec-headers
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
-    override-pull: |
-      snapcraftctl pull
-      last_committed_tag="$(git tag -l | grep -v v | sort -rV | head -n1)"
-      last_committed_tag_ver="$(echo ${last_committed_tag} | sed 's/n//')"
-      last_released_tag="$(snap info ffmpeg | awk '$1 == "beta:" { print $2 }')"
-      # If the latest tag from the upstream project has not been released to
-      # beta, build that tag instead of master.
-      if [ "${last_committed_tag_ver}" != "${last_released_tag}" ]; then
-        git fetch
-        git checkout "${last_committed_tag}"
-      fi
-      snapcraftctl set-version "$last_committed_tag_ver"
+    source-branch: release/4.3
+    source-depth: 1
+    build-environment:
+      - CC: gcc-8
+      - CCX: g++-8
     build-packages:
+      - flite1-dev
+      - gcc-8
+      - g++-8
       - libass-dev
+      - libbs2b-dev
+      - libbluray-dev
       - libbz2-dev
+      - libcaca-dev
+      - libcdio-paranoia-dev
+      - libchromaprint-dev
+      - libcodec2-dev
+      - libdc1394-22-dev
       - libdrm-dev
+      - libfribidi-dev
+      - libgme-dev
       - libgnutls28-dev
+      - libgsm1-dev
       - liblzma-dev
       - libmp3lame-dev
       - libomxil-bellagio-dev
       - libopenal-dev
       - libopencore-amrnb-dev
       - libopencore-amrwb-dev
+      - libopenjp2-7-dev
+      - libopenmpt-dev
       - libopus-dev
       - libpulse-dev
+      - librsvg2-dev
+      - librubberband-dev
       - libsctp-dev
       - libsdl2-dev
+      - libshine-dev
+      - libsnappy-dev
+      - libsoxr-dev
       - libspeex-dev
+      - libssh-gcrypt-dev
+      - libtesseract-dev
       - libtheora-dev
       - libtwolame-dev
       - libva-dev
       - libv4l-dev
       - libvdpau-dev
+      - libvo-amrwbenc-dev
       - libvorbis-dev
       - libvpx-dev
+      - libwavpack-dev
+      - libwebp-dev
       - libx264-dev
       - libx265-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
       - libxcb-xfixes0-dev
+      - libxml2-dev
       - libxv-dev
       - libxvidcore-dev
+      - libzmq3-dev
+      - libzvbi-dev
       - ocl-icd-opencl-dev
       - opencl-headers
       - pkg-config
@@ -90,28 +137,55 @@ parts:
       - on i386:
         - libcrystalhd-dev
     stage-packages:
+      - freeglut3
       - libass9
+      - libbluray2
+      - libbs2b0
+      - libcaca0
+      - libcdio-paranoia2
+      - libchromaprint1
+      - libcodec2-0.7
+      - libdc1394-22
       - libdrm2
+      - libflite1
+      - libfribidi0
+      - libglu1-mesa
+      - libgme0
       - libgnutls30
+      - libgsm1
       - libmp3lame0
       - libopenal1
       - libopencore-amrnb0
       - libopencore-amrwb0
+      - libopenjp2-7
+      - libopenmpt0
       - libopus0
       - libpulse0
+      - librsvg2-2
+      - librubberband2
       - libsdl2-2.0-0
+      - libshine3
+      - libslang2
+      - libsnappy1v5
+      - libsoxr0
       - libspeex1
+      - libssh-gcrypt-4
+      - libtesseract4
       - libtheora0
       - libtwolame0
+      - libusb-1.0-0
       - libv4l-0
       - libv4l2rds0
       - libva-drm2
       - libva-glx2
       - libva-wayland2
       - libvdpau-va-gl1
+      - libvo-amrwbenc0
       - libvorbis0a
       - libvorbisenc2
       - libvpx5
+      - libwavpack1
+      - libwebp6
       - libx264-152
       - libx265-146
       - libx11-6
@@ -122,104 +196,137 @@ parts:
       - libxcb1
       - libxdmcp6
       - libxext6
+      - libxml2
       - libxv1
       - libxvidcore4
-      - mesa-va-drivers
+      - libzmq5
+      - libzvbi0
       - mesa-vdpau-drivers
       - ocl-icd-libopencl1
       - on amd64:
-        - i965-va-driver
+        - mesa-va-drivers
         - libcrystalhd3
         - libnppig9.1
         - libnppicc9.1
         - libnppidei9.1
       - on i386:
-        - i965-va-driver
+        - mesa-va-drivers
         - libcrystalhd3
-    configflags:
-      - --prefix=/usr
-      - --disable-debug
-      - --disable-doc
-      - --disable-static
-      - --enable-cuda
-      - --enable-cuda-sdk
-      - --enable-cuvid
-      - --enable-libdrm
-      - --enable-ffplay
-      - --enable-gnutls
-      - --enable-gpl
-      - --enable-libass
-      - --enable-libfdk-aac
-      - --enable-libfontconfig
-      - --enable-libfreetype
-      - --enable-libmp3lame
-      - --enable-libnpp
-      - --enable-libopencore_amrnb
-      - --enable-libopencore_amrwb
-      - --enable-libopus
-      - --enable-libpulse
-      - --enable-sdl2
-      - --enable-libspeex
-      - --enable-libtheora
-      - --enable-libtwolame
-      - --enable-libv4l2
-      - --enable-libvorbis
-      - --enable-libvpx
-      - --enable-libx264
-      - --enable-libx265
-      - --enable-libxcb
-      - --enable-libxvid
-      - --enable-nonfree
-      - --enable-nvenc
-      - --enable-omx
-      - --enable-openal
-      - --enable-opencl
-      - --enable-runtime-cpudetect
-      - --enable-shared
-      - --enable-vaapi
-      - --enable-vdpau
-      - --enable-version3
-      - --enable-xlib
-    after:
-      - nv-codec-headers
-      - fdk-aac
-    prime:
-      - usr/bin
-      - usr/lib
-      - usr/lib/pkgconfig
-      - usr/include
-      - -usr/share/doc
-      - -usr/share/man
+    override-build: |
+      ARCHITECTURE=$(dpkg --print-architecture)
+      if [ "${ARCHITECTURE}" = "amd64" ]; then
+        EXTRA="--enable-vdpau --enable-cuda --enable-cuda-sdk --enable-cuvid --enable-libnpp"
+      elif [ "${ARCHITECTURE}" = "i386" ]; then
+        EXTRA="--enable-vdpau"
+      elif [ "${ARCHITECTURE}" = "armhf" ] || [ "${ARCHITECTURE}" = "arm64" ]; then
+        EXTRA="--disable-vdpau"
+      else
+        EXTRA=""
+      fi
+      ./configure \
+      --prefix=/usr \
+      --disable-debug \
+      --disable-doc \
+      --disable-libfdk-aac \
+      --disable-static \
+      --enable-avisynth \
+      --enable-chromaprint \
+      --enable-ffplay \
+      --enable-gnutls \
+      --enable-gpl \
+      --enable-libass \
+      --enable-libbluray \
+      --enable-libbs2b \
+      --enable-libcaca \
+      --enable-libcdio \
+      --enable-libcodec2 \
+      --enable-libdc1394 \
+      --enable-libdrm \
+      --enable-libflite \
+      --enable-libfontconfig \
+      --enable-libfribidi \
+      --enable-libfreetype \
+      --enable-libgme \
+      --enable-libgsm \
+      --enable-libmp3lame \
+      --enable-libopencore_amrnb \
+      --enable-libopencore_amrwb \
+      --enable-libopenjpeg \
+      --enable-libopenmpt \
+      --enable-libopus \
+      --enable-libpulse \
+      --enable-librsvg \
+      --enable-librubberband \
+      --enable-libshine \
+      --enable-libsnappy \
+      --enable-libsoxr \
+      --enable-libspeex \
+      --enable-libssh \
+      --enable-libtesseract \
+      --enable-libtheora \
+      --enable-libtwolame \
+      --enable-libv4l2 \
+      --enable-libvo_amrwbenc \
+      --enable-libvorbis \
+      --enable-libvpx \
+      --enable-libwavpack \
+      --enable-libwebp \
+      --enable-libx264 \
+      --enable-libx265 \
+      --enable-libxcb \
+      --enable-libxml2 \
+      --enable-libxvid \
+      --enable-libzmq \
+      --enable-libzvbi \
+      --enable-nonfree \
+      --enable-nvenc \
+      --enable-omx \
+      --enable-openal \
+      --enable-opencl \
+      --enable-opengl \
+      --enable-runtime-cpudetect \
+      --enable-sdl2 \
+      --enable-shared \
+      --enable-vaapi \
+      --enable-version3 \
+      --enable-xlib ${EXTRA}
+      make
+      make install
 
   ffmpeg-wrapper:
     plugin: dump
-    source: files
+    after: [ ffmpeg ]
+    source: snap/local/
     stage-packages:
       - mesa-utils
+      - mesa-utils-extra
+      - vainfo
+      - vdpauinfo
     organize:
-      'ffplay': bin/
-      'ffmpeg': bin/
-      'ffprobe': bin/
-      'wrapper': bin/
-    after:
-      - ffmpeg
+      ffmpeg-wrapper: bin/
+
+  cleanup:
+    plugin: nil
+    after: [ ffmpeg-wrapper ]
+    override-prime: |
+      for CRUFT in usr/share/bug usr/share/lintian usr/share/man; do
+        rm -rf ${SNAPCRAFT_PRIME}/${CRUFT}
+      done
+      find ${SNAPCRAFT_PRIME}/usr/share/doc/ -type f -not -name 'copyright' -delete || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/*.gz 2>/dev/null || true
+      rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/README* 2>/dev/null || true
+      find ${SNAPCRAFT_PRIME}/usr/share -type d -empty -delete || true
 
 apps:
   ffmpeg:
-    command: bin/ffmpeg
-    environment:
-      # Tell libGL where to find the drivers
-      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-      # Mesa Libs for OpenGL support
-      # Workaround in snapd for proprietary nVidia drivers mounts the drivers in
-      # /var/lib/snapd/lib/gl that needs to be in LD_LIBRARY_PATH
-      # Without that OpenGL using apps do not work with the nVidia drivers.
-      # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
-    plugs:
+    command: usr/bin/ffmpeg
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: &plugs
+      - alsa
       - audio-playback
       - audio-record
-      - alsa
       - camera
       - desktop
       - hardware-observe
@@ -233,56 +340,38 @@ apps:
       - wayland
       - x11
   ffprobe:
-    command: bin/ffprobe
-    environment:
-      # Tell libGL where to find the drivers
-      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-      # Mesa Libs for OpenGL support
-      # Workaround in snapd for proprietary nVidia drivers mounts the drivers in
-      # /var/lib/snapd/lib/gl that needs to be in LD_LIBRARY_PATH
-      # Without that OpenGL using apps do not work with the nVidia drivers.
-      # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
-    plugs:
-      - audio-playback
-      - audio-record
-      - alsa
-      - camera
-      - desktop
-      - hardware-observe
-      - home
-      - network-bind
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - wayland
-      - x11
+    command: usr/bin/ffprobe
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
   ffplay:
-    command: bin/ffplay
-    environment:
-      # Tell libGL where to find the drivers
-      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/dri
-      # Mesa Libs for OpenGL support
-      # Workaround in snapd for proprietary nVidia drivers mounts the drivers in
-      # /var/lib/snapd/lib/gl that needs to be in LD_LIBRARY_PATH
-      # Without that OpenGL using apps do not work with the nVidia drivers.
-      # Ref.: https://bugs.launchpad.net/snappy/+bug/1588192
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/mesa-egl:$LIBGL_DRIVERS_PATH:/var/lib/snapd/lib/gl
-    plugs:
-      - audio-playback
-      - audio-record
-      - alsa
-      - camera
-      - desktop
-      - hardware-observe
-      - home
-      - network-bind
-      - network
-      - opengl
-      - optical-drive
-      - pulseaudio
-      - removable-media
-      - wayland
-      - x11
+    command: usr/bin/ffplay
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  vainfo:
+    command: usr/bin/vainfo
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  vdpauinfo:
+    command: usr/bin/vdpauinfo
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  eglinfo:
+    command: usr/bin/eglinfo
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  glxinfo:
+    command: usr/bin/glxinfo
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
