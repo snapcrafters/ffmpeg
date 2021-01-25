@@ -215,9 +215,9 @@ parts:
     override-build: |
       ARCHITECTURE=$(dpkg --print-architecture)
       if [ "${ARCHITECTURE}" = "amd64" ]; then
-        EXTRA="--enable-vdpau --enable-cuda --enable-cuda-sdk --enable-cuvid --enable-libnpp"
+        EXTRA="--enable-vdpau --enable-nvenc --enable-cuda --enable-cuda-sdk --enable-cuvid --enable-libnpp"
       elif [ "${ARCHITECTURE}" = "i386" ]; then
-        EXTRA="--enable-vdpau"
+        EXTRA="--enable-vdpau --enable-nvenc"
       elif [ "${ARCHITECTURE}" = "armhf" ] || [ "${ARCHITECTURE}" = "arm64" ]; then
         EXTRA="--disable-vdpau"
       else
@@ -279,7 +279,6 @@ parts:
       --enable-libzmq \
       --enable-libzvbi \
       --enable-nonfree \
-      --enable-nvenc \
       --enable-omx \
       --enable-openal \
       --enable-opencl \
