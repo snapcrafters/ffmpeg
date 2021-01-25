@@ -291,7 +291,7 @@ parts:
       --enable-version3 \
       --enable-xlib ${EXTRA}
       make
-      make install
+      make DESTDIR="$SNAPCRAFT_PART_INSTALL" install
 
   ffmpeg-wrapper:
     plugin: dump
