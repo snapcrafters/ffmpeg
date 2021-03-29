@@ -1,5 +1,5 @@
 name: ffmpeg
-version: '4.3.1'
+version: '4.3.2'
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
@@ -63,7 +63,7 @@ parts:
       - nv-codec-headers
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
-    source-branch: release/4.3
+    source-tag: n$SNAPCRAFT_PROJECT_VERSION
     source-depth: 1
     build-environment:
       - CC: gcc-8
