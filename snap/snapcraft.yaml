@@ -1,5 +1,5 @@
 name: ffmpeg
-version: '4.3.2'
+adopt-info: ffmpeg
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
@@ -8,7 +8,7 @@ description: |
  up to the cutting edge. No matter if they were designed by some standards
  committee, the community or a corporation.
 
-base: core18
+base: core20
 grade: stable
 confinement: strict
 
@@ -29,25 +29,23 @@ parts:
 
   nv-codec-headers:
     plugin: make
-    after: [ desktop-glib-only ]
     source: https://github.com/FFmpeg/nv-codec-headers.git
-    source-branch: 'sdk/9.1'
+    source-branch: 'sdk/10.0'
     make-parameters:
       - PREFIX=/usr
-    build-environment:
-      - CC: gcc-8
-      - CCX: g++-8
     build-packages:
-      - gcc-8
-      - g++-8
       - pkg-config
 
   avisynth-plus:
     plugin: cmake
-    after: [ nv-codec-headers ]
     source: https://github.com/AviSynth/AviSynthPlus.git
     source-tag: 'v3.6.1'
-    configflags:
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_C_FLAGS_RELEASE=-s
+      - -DCMAKE_CXX_FLAGS_RELEASE=-s
+    cmake-parameters:
       - -DCMAKE_C_COMPILER=gcc-8
       - -DCMAKE_CXX_COMPILER=g++-8
       - -DCMAKE_INSTALL_PREFIX=/usr
@@ -63,15 +61,9 @@ parts:
       - nv-codec-headers
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
-    source-tag: n$SNAPCRAFT_PROJECT_VERSION
-    source-depth: 1
-    build-environment:
-      - CC: gcc-8
-      - CCX: g++-8
+    source-branch: release/4.4
     build-packages:
       - flite1-dev
-      - gcc-8
-      - g++-8
       - libass-dev
       - libbs2b-dev
       - libbluray-dev
@@ -144,7 +136,7 @@ parts:
       - libcaca0
       - libcdio-paranoia2
       - libchromaprint1
-      - libcodec2-0.7
+      - libcodec2-0.9
       - libdc1394-22
       - libdrm2
       - libflite1
@@ -183,11 +175,11 @@ parts:
       - libvo-amrwbenc0
       - libvorbis0a
       - libvorbisenc2
-      - libvpx5
+      - libvpx6
       - libwavpack1
       - libwebp6
-      - libx264-152
-      - libx265-146
+      - libwebpmux3
+      - libx265-179
       - libx11-6
       - libxau6
       - libxcb-shape0
@@ -206,12 +198,15 @@ parts:
       - on amd64:
         - mesa-va-drivers
         - libcrystalhd3
-        - libnppig9.1
-        - libnppicc9.1
-        - libnppidei9.1
+        - libnppig10
+        - libnppicc10
+        - libnppidei10
       - on i386:
         - mesa-va-drivers
         - libcrystalhd3
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version "$(git describe --tags)"
     override-build: |
       ARCHITECTURE=$(dpkg --print-architecture)
       if [ "${ARCHITECTURE}" = "amd64" ]; then
@@ -269,7 +264,6 @@ parts:
       --enable-libvo_amrwbenc \
       --enable-libvorbis \
       --enable-libvpx \
-      --enable-libwavpack \
       --enable-libwebp \
       --enable-libx264 \
       --enable-libx265 \
@@ -289,7 +283,7 @@ parts:
       --enable-vaapi \
       --enable-version3 \
       --enable-xlib ${EXTRA}
-      make
+      make -j $(nproc)
       make DESTDIR="$SNAPCRAFT_PART_INSTALL" install
 
   ffmpeg-wrapper:
