@@ -121,6 +121,19 @@ parts:
     prime:
       - -usr/include
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+
+  zimg:
+    plugin: autotools
+    source: https://github.com/sekrit-twc/zimg.git
+    source-tag: 'release-3.0.1'
+    autotools-configure-parameters:
+      - --prefix=/usr
+    prime:
+      - -usr/include
+      - -usr/lib/*.a
+      - -usr/lib/*.la
+      - -usr/lib/pkgconfig
+
   ffmpeg:
     after:
       - aom
@@ -130,6 +143,7 @@ parts:
       - nv-codec-headers
       - srt
       - x264
+      - zimg
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
     source-branch: release/4.4
@@ -343,6 +357,7 @@ parts:
       --enable-libxcb \
       --enable-libxml2 \
       --enable-libxvid \
+      --enable-libzimg \
       --enable-libzmq \
       --enable-libzvbi \
       --enable-nonfree \
