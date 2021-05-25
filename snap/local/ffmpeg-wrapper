@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-export VDPAU_DRIVER_PATH="/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/vdpau/"
-if [ -e "/var/lib/snapd/lib/gl/vdpau/libvdpau_nvidia.so" ]; then
-  export VDPAU_DRIVER_PATH="/var/lib/snapd/lib/gl/vdpau"
-  # Prevent picking VA-API (Intel/AMD) over NVIDIA VDPAU; on PRIME systems for example
-  unset LIBVA_DRIVERS_PATH
+if [ -d "${SNAP}/usr/lib/alsa-lib" ]; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/usr/lib/alsa-lib"
+elif [ -d "${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib" ]; then
+  export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib"
 fi
 
-exec "$@"
+exec "${@}"
