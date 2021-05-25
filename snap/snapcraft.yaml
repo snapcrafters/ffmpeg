@@ -104,10 +104,28 @@ parts:
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libaom.a
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
 
+  dav1d:
+    plugin: meson
+    source: https://code.videolan.org/videolan/dav1d.git
+    source-tag: '0.9.0'
+    meson-parameters:
+      - --prefix=/usr
+      - --buildtype=release
+      - --strip
+      - -Denable_tools=false
+      - -Denable_tests=false
+    build-packages:
+      - libxxhash-dev
+    stage-packages:
+      - libxxhash0
+    prime:
+      - -usr/include
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
   ffmpeg:
     after:
       - aom
       - avisynth-plus
+      - dav1d
       - desktop-glib-only
       - nv-codec-headers
       - srt
@@ -279,6 +297,7 @@ parts:
       --enable-libaom \
       --enable-avisynth \
       --enable-chromaprint \
+      --enable-libdav1d \
       --enable-ffplay \
       --enable-gnutls \
       --enable-gpl \
