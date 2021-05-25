@@ -65,6 +65,22 @@ parts:
     prime:
       - -usr/include
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+
+  x264:
+    plugin: autotools
+    source: https://code.videolan.org/videolan/x264.git
+    source-branch: 'stable'
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --disable-cli
+      - --enable-shared
+      - --enable-strip
+    build-packages:
+      - libva-dev
+      - nasm
+    prime:
+      - usr/lib
+      - -usr/lib/pkgconfig
     cmake-parameters:
       - -DCMAKE_C_COMPILER=gcc-8
       - -DCMAKE_CXX_COMPILER=g++-8
@@ -80,6 +96,7 @@ parts:
       - desktop-glib-only
       - nv-codec-headers
       - srt
+      - x264
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
     source-branch: release/4.4
@@ -129,7 +146,6 @@ parts:
       - libvpx-dev
       - libwavpack-dev
       - libwebp-dev
-      - libx264-dev
       - libx265-dev
       - libxcb-shape0-dev
       - libxcb-shm0-dev
