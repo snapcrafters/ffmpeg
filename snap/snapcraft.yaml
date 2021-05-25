@@ -36,6 +36,23 @@ parts:
     build-packages:
       - pkg-config
 
+  srt:
+    plugin: cmake
+    source: https://github.com/Haivision/srt.git
+    source-tag: 'v1.4.3'
+    cmake-parameters:
+      - -DCMAKE_INSTALL_PREFIX=/usr
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_C_FLAGS_RELEASE=-s
+      - -DCMAKE_CXX_FLAGS_RELEASE=-s
+      - -DENABLE_LOGGING=OFF
+      - -DENABLE_STATIC=OFF
+    build-packages:
+      - libssl-dev
+    prime:
+      - -usr/include
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
+
   avisynth-plus:
     plugin: cmake
     source: https://github.com/AviSynth/AviSynthPlus.git
@@ -62,6 +79,7 @@ parts:
       - avisynth-plus
       - desktop-glib-only
       - nv-codec-headers
+      - srt
     plugin: autotools
     source: https://github.com/FFmpeg/FFmpeg.git
     source-branch: release/4.4
@@ -259,6 +277,7 @@ parts:
       --enable-libsnappy \
       --enable-libsoxr \
       --enable-libspeex \
+      --enable-libsrt \
       --enable-libssh \
       --enable-libtesseract \
       --enable-libtheora \
@@ -343,6 +362,30 @@ apps:
     plugs: *plugs
   ffplay:
     command: usr/bin/ffplay
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  srt-ffplay:
+    command: usr/bin/srt-ffplay
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  srt-file-transmit:
+    command: usr/bin/srt-file-transmit
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  srt-live-transmit:
+    command: usr/bin/srt-live-transmit
+    command-chain:
+      - bin/desktop-launch
+      - bin/ffmpeg-wrapper
+    plugs: *plugs
+  srt-tunnel:
+    command: usr/bin/srt-tunnel
     command-chain:
       - bin/desktop-launch
       - bin/ffmpeg-wrapper
