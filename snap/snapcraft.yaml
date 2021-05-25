@@ -35,6 +35,9 @@ parts:
       - PREFIX=/usr
     build-packages:
       - pkg-config
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
 
   srt:
     plugin: cmake
@@ -373,6 +376,11 @@ parts:
       --enable-xlib ${EXTRA}
       make -j $(nproc)
       make DESTDIR="$SNAPCRAFT_PART_INSTALL" install
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
+      - -usr/share/ffmpeg/examples
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libx264.so*
 
   ffmpeg-wrapper:
     plugin: dump
@@ -395,8 +403,9 @@ parts:
       done
       find ${SNAPCRAFT_PRIME}/usr/share/doc/ -type f -not -name 'copyright' -delete || true
       rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/*.gz 2>/dev/null || true
+      rm -rf ${SNAPCRAFT_PRIME}/usr/share/doc/*/examples || true
       rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/README* 2>/dev/null || true
-      find ${SNAPCRAFT_PRIME}/usr/share -type d -empty -delete || true
+      find ${SNAPCRAFT_PRIME}/usr -type d -empty -delete || true
 
 apps:
   ffmpeg:
