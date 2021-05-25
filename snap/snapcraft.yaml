@@ -81,17 +81,32 @@ parts:
     prime:
       - usr/lib
       - -usr/lib/pkgconfig
+
+  aom:
+    plugin: cmake
+    source: https://aomedia.googlesource.com/aom.git
+    source-tag: 'v3.1.0'
     cmake-parameters:
-      - -DCMAKE_C_COMPILER=gcc-8
-      - -DCMAKE_CXX_COMPILER=g++-8
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DCMAKE_BUILD_TYPE=Release
+      - -DCMAKE_C_FLAGS_RELEASE=-s
+      - -DCMAKE_CXX_FLAGS_RELEASE=-s
+      - -DCONFIG_MULTITHREAD=1
+      - -DBUILD_SHARED_LIBS=1
+      - -DENABLE_DOCS=0
+      - -DENABLE_EXAMPLES=0
+      - -DENABLE_TESTS=0
     build-packages:
-      - gcc-8
-      - g++-8
+      - ninja-build
+      - yasm
+    prime:
+      - -usr/include
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libaom.a
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
 
   ffmpeg:
     after:
+      - aom
       - avisynth-plus
       - desktop-glib-only
       - nv-codec-headers
@@ -261,6 +276,7 @@ parts:
       --disable-doc \
       --disable-libfdk-aac \
       --disable-static \
+      --enable-libaom \
       --enable-avisynth \
       --enable-chromaprint \
       --enable-ffplay \
