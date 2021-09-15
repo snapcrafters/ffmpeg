@@ -368,7 +368,6 @@ parts:
       --enable-libzimg \
       --enable-libzmq \
       --enable-libzvbi \
-      --enable-nonfree \
       --enable-omx \
       --enable-openal \
       --enable-opencl \
@@ -379,6 +378,9 @@ parts:
       --enable-vaapi \
       --enable-version3 \
       --enable-xlib ${EXTRA}
+      
+      # TODO: re-enable `--enable-nonfree \` if we can determine the legality/licensing issues are ok.
+      
       make -j $(nproc)
       make DESTDIR="$SNAPCRAFT_PART_INSTALL" install
     prime:
