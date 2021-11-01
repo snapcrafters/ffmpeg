@@ -133,7 +133,7 @@ parts:
   zimg:
     plugin: autotools
     source: https://github.com/sekrit-twc/zimg.git
-    source-tag: 'release-3.0.1'
+    source-tag: 'release-3.0.3'
     autotools-configure-parameters:
       - --prefix=/usr
     prime:
