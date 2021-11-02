@@ -216,8 +216,9 @@ parts:
       - yasm
       - on amd64:
         - libcrystalhd-dev
-        - nvidia-cuda-dev
-        - nvidia-cuda-toolkit
+        # TODO: re-enable `nvidia-cuda*` if we can determine that we can ship non-free
+        # - nvidia-cuda-dev
+        # - nvidia-cuda-toolkit
       - on i386:
         - libcrystalhd-dev
     stage-packages:
@@ -290,9 +291,10 @@ parts:
       - on amd64:
         - mesa-va-drivers
         - libcrystalhd3
-        - libnppig10
-        - libnppicc10
-        - libnppidei10
+        # TODO: re-enable `libnpp*` if we can determine that we can ship non-free
+        # - libnppig10
+        # - libnppicc10
+        # - libnppidei10
       - on i386:
         - mesa-va-drivers
         - libcrystalhd3
@@ -302,7 +304,8 @@ parts:
     override-build: |
       ARCHITECTURE=$(dpkg --print-architecture)
       if [ "${ARCHITECTURE}" = "amd64" ]; then
-        EXTRA="--enable-vdpau --enable-nvenc --enable-cuda --enable-cuda-sdk --enable-cuvid --enable-libnpp"
+        # TODO: re-enable `--enable-cuda-sdk --enable-cuda --enable-libnpp` if we can determine that we can ship non-free
+        EXTRA="--enable-vdpau --enable-nvenc --enable-cuvid"
       elif [ "${ARCHITECTURE}" = "i386" ]; then
         EXTRA="--enable-vdpau --enable-nvenc"
       elif [ "${ARCHITECTURE}" = "armhf" ] || [ "${ARCHITECTURE}" = "arm64" ]; then
