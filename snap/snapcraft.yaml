@@ -13,6 +13,12 @@ grade: stable
 confinement: strict
 compression: lzo
 
+architectures:
+  - build-on: amd64
+  - build-on: ppc64el
+  - build-on: arm64
+  - build-on: armhf
+
 layout:
   /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
     symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
@@ -35,7 +41,7 @@ parts:
   nv-codec-headers:
     plugin: make
     source: https://github.com/FFmpeg/nv-codec-headers.git
-    source-branch: 'sdk/10.0'
+    source-branch: 'sdk/11.0'
     make-parameters:
       - PREFIX=/usr
     build-packages:
@@ -104,6 +110,25 @@ parts:
       - -DENABLE_DOCS=0
       - -DENABLE_EXAMPLES=0
       - -DENABLE_TESTS=0
+    override-build: |
+      EXTRA_PARAMS=()
+      if [ "$SNAPCRAFT_TARGET_ARCH" = "armhf" ]; then
+        EXTRA_PARAMS+=(-DAOM_NEON_INTRIN_FLAG=-mfpu=neon)
+      fi
+      cmake $SNAPCRAFT_PART_SRC \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_C_FLAGS_RELEASE=-s \
+        -DCMAKE_CXX_FLAGS_RELEASE=-s \
+        -DCONFIG_MULTITHREAD=1 \
+        -DBUILD_SHARED_LIBS=1 \
+        -DENABLE_DOCS=0 \
+        -DENABLE_EXAMPLES=0 \
+        -DENABLE_TESTS=0 \
+        ${EXTRA_PARAMS[@]}
+
+      cmake --build . -j$(nproc)
+      DESTDIR=$SNAPCRAFT_PART_INSTALL cmake --install .
     build-packages:
       - ninja-build
       - yasm
@@ -302,13 +327,12 @@ parts:
       snapcraftctl pull
       snapcraftctl set-version "$(git describe --tags)"
     override-build: |
-      ARCHITECTURE=$(dpkg --print-architecture)
-      if [ "${ARCHITECTURE}" = "amd64" ]; then
+      if [ "$SNAPCRAFT_TARGET_ARCH" = "amd64" ]; then
         # TODO: re-enable `--enable-cuda-sdk --enable-cuda --enable-libnpp` if we can determine that we can ship non-free
         EXTRA="--enable-vdpau --enable-nvenc --enable-cuvid"
-      elif [ "${ARCHITECTURE}" = "i386" ]; then
+      elif [ "$SNAPCRAFT_TARGET_ARCH" = "i386" ]; then
         EXTRA="--enable-vdpau --enable-nvenc"
-      elif [ "${ARCHITECTURE}" = "armhf" ] || [ "${ARCHITECTURE}" = "arm64" ]; then
+      elif [ "$SNAPCRAFT_TARGET_ARCH" = "armhf" ] || [ "$SNAPCRAFT_TARGET_ARCH" = "arm64" ]; then
         EXTRA="--disable-vdpau"
       else
         EXTRA=""
