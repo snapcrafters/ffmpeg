@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Wrapper script to launch the content snap executables
+
+set_opts=(
+    # Terminate script execution when an unhandled error occurs
+    -o errexit
+
+    # Terminate script execution when an unset parameter variable is
+    # referenced
+    -o nounset
+)
+if ! set "${set_opts[@]}"; then
+    printf \
+        'content-snap-executable-wrapper: Error: Unable to configure the defensive interpreter behaviors.\n' \
+        1>&2
+    exit 1
+fi
+
+if ! trap 'printf "content-snap-executable-wrapper: Error: The program has encountered an unhandled error and is prematurely aborted.\\n" 1>&2' ERR; then
+    printf \
+        'content-snap-executable-wrapper: Error: Unable to set the ERR trap.\n' \
+        1>&2
+    exit 1
+fi
+
+base_command="${0##*/}"
+
+ffmpeg_exe="${SNAP}/ffmpeg-platform/usr/bin/${base_command}"
+mesa_exe="${SNAP}/gpu-2404/usr/bin/${base_command}"
+self_exe="${SNAP}/usr/bin/${base_command}"
+if test -e "${ffmpeg_exe}"; then
+	executable="${ffmpeg_exe}"
+elif test -e "${mesa_exe}"; then
+	executable="${mesa_exe}"
+elif test -e "${self_exe}"; then
+	executable="${self_exe}"
+else
+    printf \
+        'content-snap-executable-wrapper: Error: Unable to locate the executable for command "%s".\n' \
+        "${base_command}" \
+		1>&2
+    exit 1
+fi
+
+if ! exec "${executable}" "$@"; then
+    printf \
+        'content-snap-executable-wrapper: Error: exec failed.\n' \
+        1>&2
+    exit 1
+fi
