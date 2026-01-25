@@ -1,5 +1,5 @@
 name: ffmpeg
-adopt-info: ffmpeg
+version: ffmpeg-2404
 summary: A complete solution to record, convert and stream audio and video.
 description: |
  FFmpeg is the leading multimedia framework, able to decode, encode,
@@ -8,24 +8,37 @@ description: |
  up to the cutting edge. No matter if they were designed by some standards
  committee, the community or a corporation.
 
-base: core20
+base: core24
 grade: stable
 confinement: strict
 compression: lzo
 
-architectures:
-  - build-on: amd64
-  - build-on: ppc64el
-  - build-on: arm64
-  - build-on: armhf
+platforms:
+  amd64:
+  ppc64el:
+  arm64:
+  armhf:
+
+plugs:
+  ffmpeg-2404:
+    interface: content
+    target: $SNAP/ffmpeg-platform
+    default-provider: ffmpeg-2404
+
+  gpu-2404:
+    interface: content
+    target: $SNAP/gpu-2404
+    default-provider: mesa-2404
 
 layout:
-  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
-    symlink: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+  /usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib:
+    symlink: $SNAP/usr/lib/$CRAFT_ARCH_TRIPLET_BUILD_FOR/alsa-lib
   /usr/share/alsa:
     symlink: $SNAP/usr/share/alsa
-  /usr/share/libdrm/amdgpu.ids:
-    symlink: $SNAP/usr/share/libdrm/amdgpu.ids
+  /usr/share/libdrm:
+    bind: $SNAP/gpu-2404/libdrm
+  /usr/share/drirc.d:
+    symlink: $SNAP/gpu-2404/drirc.d
 
 parts:
   desktop-glib-only:
@@ -39,388 +52,43 @@ parts:
     organize:
       desktop-launch: bin/
 
-  nv-codec-headers:
-    plugin: make
-    source: https://github.com/FFmpeg/nv-codec-headers.git
-    source-branch: 'sdk/11.0'
-    make-parameters:
-      - PREFIX=/usr
-    build-packages:
-      - pkg-config
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-
-  srt:
-    plugin: cmake
-    source: https://github.com/Haivision/srt.git
-    source-tag: 'v1.4.4'
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DCMAKE_C_FLAGS_RELEASE=-s
-      - -DCMAKE_CXX_FLAGS_RELEASE=-s
-      - -DENABLE_LOGGING=OFF
-      - -DENABLE_STATIC=OFF
-    build-packages:
-      - libssl-dev
-    prime:
-      - -usr/include
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-
-  avisynth-plus:
-    plugin: cmake
-    source: https://github.com/AviSynth/AviSynthPlus.git
-    source-tag: 'v3.7.0'
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DCMAKE_C_FLAGS_RELEASE=-s
-      - -DCMAKE_CXX_FLAGS_RELEASE=-s
-    prime:
-      - -usr/include
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-
-  x264:
-    plugin: autotools
-    source: https://code.videolan.org/videolan/x264.git
-    source-branch: 'stable'
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --disable-cli
-      - --enable-shared
-      - --enable-strip
-    build-packages:
-      - libva-dev
-      - nasm
-    prime:
-      - usr/lib
-      - -usr/lib/pkgconfig
-
-  aom:
-    plugin: cmake
-    source: https://aomedia.googlesource.com/aom.git
-    source-tag: 'v3.2.0'
-    cmake-parameters:
-      - -DCMAKE_INSTALL_PREFIX=/usr
-      - -DCMAKE_BUILD_TYPE=Release
-      - -DCMAKE_C_FLAGS_RELEASE=-s
-      - -DCMAKE_CXX_FLAGS_RELEASE=-s
-      - -DCONFIG_MULTITHREAD=1
-      - -DBUILD_SHARED_LIBS=1
-      - -DENABLE_DOCS=0
-      - -DENABLE_EXAMPLES=0
-      - -DENABLE_TESTS=0
-    override-build: |
-      EXTRA_PARAMS=()
-      if [ "$SNAPCRAFT_TARGET_ARCH" = "armhf" ]; then
-        EXTRA_PARAMS+=(-DAOM_NEON_INTRIN_FLAG=-mfpu=neon)
-      fi
-      cmake $SNAPCRAFT_PART_SRC \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_FLAGS_RELEASE=-s \
-        -DCMAKE_CXX_FLAGS_RELEASE=-s \
-        -DCONFIG_MULTITHREAD=1 \
-        -DBUILD_SHARED_LIBS=1 \
-        -DENABLE_DOCS=0 \
-        -DENABLE_EXAMPLES=0 \
-        -DENABLE_TESTS=0 \
-        ${EXTRA_PARAMS[@]}
-
-      cmake --build . -j$(nproc)
-      DESTDIR=$SNAPCRAFT_PART_INSTALL cmake --install .
-    build-packages:
-      - ninja-build
-      - yasm
-    prime:
-      - -usr/include
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libaom.a
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-
-  dav1d:
-    plugin: meson
-    source: https://code.videolan.org/videolan/dav1d.git
-    source-tag: '0.9.2'
-    meson-parameters:
-      - --prefix=/usr
-      - --buildtype=release
-      - --strip
-      - -Denable_tools=false
-      - -Denable_tests=false
-    build-packages:
-      - libxxhash-dev
-    stage-packages:
-      - libxxhash0
-    prime:
-      - -usr/include
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pkgconfig
-
-  zimg:
-    plugin: autotools
-    source: https://github.com/sekrit-twc/zimg.git
-    source-tag: 'release-3.0.3'
-    autotools-configure-parameters:
-      - --prefix=/usr
-    prime:
-      - -usr/include
-      - -usr/lib/*.a
-      - -usr/lib/*.la
-      - -usr/lib/pkgconfig
-
   ffmpeg:
-    after:
-      - aom
-      - avisynth-plus
-      - dav1d
-      - desktop-glib-only
-      - nv-codec-headers
-      - srt
-      - x264
-      - zimg
-    plugin: autotools
+    plugin: nil
     source: https://github.com/FFmpeg/FFmpeg.git
-    source-branch: release/4.4
-    build-packages:
-      - flite1-dev
-      - libass-dev
-      - libbs2b-dev
-      - libbluray-dev
-      - libbz2-dev
-      - libcaca-dev
-      - libcdio-paranoia-dev
-      - libchromaprint-dev
-      - libcodec2-dev
-      - libdc1394-22-dev
-      - libdrm-dev
-      - libfribidi-dev
-      - libgme-dev
-      - libgnutls28-dev
-      - libgsm1-dev
-      - liblzma-dev
-      - libmp3lame-dev
-      - libomxil-bellagio-dev
-      - libopenal-dev
-      - libopencore-amrnb-dev
-      - libopencore-amrwb-dev
-      - libopenjp2-7-dev
-      - libopenmpt-dev
-      - libopus-dev
-      - libpulse-dev
-      - librsvg2-dev
-      - librubberband-dev
-      - libsctp-dev
-      - libsdl2-dev
-      - libshine-dev
-      - libsnappy-dev
-      - libsoxr-dev
-      - libspeex-dev
-      - libssh-gcrypt-dev
-      - libtesseract-dev
-      - libtheora-dev
-      - libtwolame-dev
-      - libva-dev
-      - libv4l-dev
-      - libvdpau-dev
-      - libvo-amrwbenc-dev
-      - libvorbis-dev
-      - libvpx-dev
-      - libvulkan-dev
-      - libwavpack-dev
-      - libwebp-dev
-      - libx265-dev
-      - libxcb-shape0-dev
-      - libxcb-shm0-dev
-      - libxcb-xfixes0-dev
-      - libxml2-dev
-      - libxv-dev
-      - libxvidcore-dev
-      - libzmq3-dev
-      - libzvbi-dev
-      - ocl-icd-opencl-dev
-      - opencl-headers
-      - pkg-config
-      - yasm
-      - on amd64:
-        - libcrystalhd-dev
-        # TODO: re-enable `nvidia-cuda*` if we can determine that we can ship non-free
-        # - nvidia-cuda-dev
-        # - nvidia-cuda-toolkit
-      - on i386:
-        - libcrystalhd-dev
     stage-packages:
-      - freeglut3
-      - libass9
-      - libbluray2
-      - libbs2b0
+      - libasound2t64
+      - libarchive13t64
       - libcaca0
-      - libcdio-paranoia2
-      - libchromaprint1
-      - libcodec2-0.9
-      - libdc1394-22
+      - libcairo2
       - libdrm2
-      - libflite1
-      - libfribidi0
-      - libglu1-mesa
-      - libgme0
-      - libgnutls30
-      - libgsm1
-      - libmp3lame0
-      - libopenal1
-      - libopencore-amrnb0
-      - libopencore-amrwb0
+      - libgomp1
+      - libfreetype6
+      - libldap2
+      - liblcms2-2
+      - libmpg123-0t64
+      - libogg0
       - libopenjp2-7
-      - libopenmpt0
       - libopus0
       - libpulse0
+      - libraw1394-11
       - librsvg2-2
-      - librubberband2
-      - libsdl2-2.0-0
-      - libshine3
-      - libslang2
-      - libsnappy1v5
-      - libsoxr0
-      - libspeex1
-      - libssh-gcrypt-4
-      - libtesseract4
-      - libtheora0
       - libtwolame0
-      - libusb-1.0-0
-      - libv4l-0
-      - libv4l2rds0
-      - libva-drm2
-      - libva-glx2
-      - libva-wayland2
-      - libvdpau-va-gl1
-      - libvo-amrwbenc0
-      - libvorbis0a
-      - libvorbisenc2
-      - libvpx6
-      - libvulkan1
-      - libwavpack1
-      - libwebp6
-      - libwebpmux3
-      - libx265-179
-      - libx11-6
-      - libxau6
-      - libxcb-shape0
+      - libv4l-0t64
+      - libvpx9
+      - libxcb1
       - libxcb-shm0
       - libxcb-xfixes0
-      - libxcb1
-      - libxdmcp6
-      - libxext6
-      - libxml2
-      - libxv1
-      - libxvidcore4
-      - libzmq5
-      - libzvbi0
-      - mesa-vdpau-drivers
-      - ocl-icd-libopencl1
-      - on amd64:
-        - mesa-va-drivers
-        - libcrystalhd3
-        # TODO: re-enable `libnpp*` if we can determine that we can ship non-free
-        # - libnppig10
-        # - libnppicc10
-        # - libnppidei10
-      - on i386:
-        - mesa-va-drivers
-        - libcrystalhd3
-    override-pull: |
-      snapcraftctl pull
-      snapcraftctl set-version "$(git describe --tags)"
-    override-build: |
-      if [ "$SNAPCRAFT_TARGET_ARCH" = "amd64" ]; then
-        # TODO: re-enable `--enable-cuda-sdk --enable-cuda --enable-libnpp` if we can determine that we can ship non-free
-        EXTRA="--enable-vdpau --enable-nvenc --enable-cuvid"
-      elif [ "$SNAPCRAFT_TARGET_ARCH" = "i386" ]; then
-        EXTRA="--enable-vdpau --enable-nvenc"
-      elif [ "$SNAPCRAFT_TARGET_ARCH" = "armhf" ]; then
-        EXTRA="--disable-vdpau --enable-neon"
-      elif [ "$SNAPCRAFT_TARGET_ARCH" = "arm64" ]; then
-        EXTRA="--disable-vdpau"
-      else
-        EXTRA=""
-      fi
-      ./configure \
-      --prefix=/usr \
-      --disable-debug \
-      --disable-doc \
-      --disable-libfdk-aac \
-      --disable-static \
-      --enable-libaom \
-      --enable-avisynth \
-      --enable-chromaprint \
-      --enable-libdav1d \
-      --enable-ffplay \
-      --enable-gnutls \
-      --enable-gpl \
-      --enable-libass \
-      --enable-libbluray \
-      --enable-libbs2b \
-      --enable-libcaca \
-      --enable-libcdio \
-      --enable-libcodec2 \
-      --enable-libdc1394 \
-      --enable-libdrm \
-      --enable-libflite \
-      --enable-libfontconfig \
-      --enable-libfribidi \
-      --enable-libfreetype \
-      --enable-libgme \
-      --enable-libgsm \
-      --enable-libmp3lame \
-      --enable-libopencore_amrnb \
-      --enable-libopencore_amrwb \
-      --enable-libopenjpeg \
-      --enable-libopenmpt \
-      --enable-libopus \
-      --enable-libpulse \
-      --enable-librsvg \
-      --enable-librubberband \
-      --enable-libshine \
-      --enable-libsnappy \
-      --enable-libsoxr \
-      --enable-libspeex \
-      --enable-libsrt \
-      --enable-libssh \
-      --enable-libtesseract \
-      --enable-libtheora \
-      --enable-libtwolame \
-      --enable-libv4l2 \
-      --enable-libvo_amrwbenc \
-      --enable-libvorbis \
-      --enable-libvpx \
-      --enable-libwebp \
-      --enable-libx264 \
-      --enable-libx265 \
-      --enable-libxcb \
-      --enable-libxml2 \
-      --enable-libxvid \
-      --enable-libzimg \
-      --enable-libzmq \
-      --enable-libzvbi \
-      --enable-omx \
-      --enable-openal \
-      --enable-opencl \
-      --enable-opengl \
-      --enable-runtime-cpudetect \
-      --enable-sdl2 \
-      --enable-shared \
-      --enable-vaapi \
-      --enable-version3 \
-      --enable-vulkan \
-      --enable-xlib ${EXTRA}
-      
-      # TODO: re-enable `--enable-nonfree \` if we can determine the legality/licensing issues are ok.
-      
-      make -j $(nproc)
-      make DESTDIR="$SNAPCRAFT_PART_INSTALL" install
+      - libxcursor1
+      - libxi6
+      - libxkbcommon0
+      - libxrandr2
+      - libspeex1
+      - libtheora0
+      - libwebp7
+      - libwebpmux3
     prime:
       - -usr/include
       - -usr/lib/pkgconfig
-      - -usr/share/ffmpeg/examples
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libx264.so*
 
   ffmpeg-wrapper:
     plugin: dump
@@ -432,6 +100,7 @@ parts:
       - vainfo
       - vdpauinfo
     organize:
+      content-snap-executable-wrapper: bin/
       ffmpeg-wrapper: bin/
     stage:
       - -desktop-glib-only
@@ -449,12 +118,45 @@ parts:
       rm ${SNAPCRAFT_PRIME}/usr/share/doc/*/README* 2>/dev/null || true
       find ${SNAPCRAFT_PRIME}/usr -type d -empty -delete || true
 
+  gpu-2404:
+    after:
+      - ffmpeg-wrapper
+    source: https://github.com/canonical/gpu-snap.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
+      # Workaround for https://bugs.launchpad.net/snapd/+bug/2055273
+      mkdir -p "${CRAFT_PRIME}/gpu-2404"
+    prime:
+      - bin/gpu-2404-wrapper
+
+  ffmpeg-2404:
+    after:
+      - gpu-2404
+    source: https://github.com/snapcrafters/ffmpeg-2404-sdk.git
+    plugin: nil
+    override-prime: |
+      craftctl default
+
+      # Workaround for https://bugs.launchpad.net/snapd/+bug/2055273
+      mkdir -p "${CRAFT_PRIME}/ffmpeg-platform"
+
+      for command in ffmpeg ffprobe ffplay srt-ffplay srt-file-transmit \
+        srt-live-transmit srt-tunnel vainfo vdpauinfo eglinfo glxinfo; do
+        ln -sv --relative --force "${CRAFT_PRIME}/bin/content-snap-executable-wrapper" \
+          "${CRAFT_PRIME}/bin/${command}"
+      done
+
 apps:
   ffmpeg:
-    command: usr/bin/ffmpeg
+    command: bin/ffmpeg
     command-chain: &command-chain
+      - bin/gpu-2404-wrapper
       - bin/desktop-launch
       - bin/ffmpeg-wrapper
+    environment: &environment
+      LD_LIBRARY_PATH: ${SNAP}/ffmpeg-platform/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}:${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
     plugs: &plugs
       - alsa
       - audio-playback
@@ -472,42 +174,52 @@ apps:
       - wayland
       - x11
   ffprobe:
-    command: usr/bin/ffprobe
+    command: bin/ffprobe
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   ffplay:
-    command: usr/bin/ffplay
+    command: bin/ffplay
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   srt-ffplay:
-    command: usr/bin/srt-ffplay
+    command: bin/srt-ffplay
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   srt-file-transmit:
-    command: usr/bin/srt-file-transmit
+    command: bin/srt-file-transmit
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   srt-live-transmit:
-    command: usr/bin/srt-live-transmit
+    command: bin/srt-live-transmit
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   srt-tunnel:
-    command: usr/bin/srt-tunnel
+    command: bin/srt-tunnel
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   vainfo:
-    command: usr/bin/vainfo
+    command: bin/vainfo
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   vdpauinfo:
-    command: usr/bin/vdpauinfo
+    command: bin/vdpauinfo
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   eglinfo:
-    command: usr/bin/eglinfo
+    command: bin/eglinfo
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
   glxinfo:
-    command: usr/bin/glxinfo
+    command: bin/glxinfo
     command-chain: *command-chain
+    environment: *environment
     plugs: *plugs
