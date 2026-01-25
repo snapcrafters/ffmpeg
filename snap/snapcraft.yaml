@@ -29,14 +29,15 @@ layout:
 
 parts:
   desktop-glib-only:
-    plugin: make
-    source: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-    source-subdir: glib-only
+    plugin: dump
+    source: snap/local/desktop-glib-only
     build-packages:
       - libglib2.0-dev
     stage-packages:
       - libglib2.0-bin
       - shared-mime-info
+    organize:
+      desktop-launch: bin/
 
   nv-codec-headers:
     plugin: make
@@ -432,6 +433,8 @@ parts:
       - vdpauinfo
     organize:
       ffmpeg-wrapper: bin/
+    stage:
+      - -desktop-glib-only
 
   cleanup:
     plugin: nil
