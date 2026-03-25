@@ -6,4 +6,17 @@ elif [ -d "${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib" ]; then
   export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${SNAP}/usr/lib/${SNAP_LAUNCHER_ARCH_TRIPLET}/alsa-lib"
 fi
 
+if ! snapctl is-connected ffmpeg-2404
+then
+  echo "ERROR: the ffmpeg-2404 interface isn't connected."
+  echo "  Please install and connect a FFmpeg runtime provider."
+  echo ""
+  echo "The default provider is ffmpeg-2404, you can install it and connect by issuing:"
+  echo "  sudo snap install ffmpeg-2404"
+  echo "  sudo snap connect ${SNAP_INSTANCE_NAME}:ffmpeg-2404 ffmpeg-2404"
+  echo ""
+  echo "See https://github.com/snapcrafters/ffmpeg-2404-sdk for more information."
+  exit 1
+fi
+
 exec "${@}"
